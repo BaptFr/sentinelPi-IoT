@@ -1,15 +1,18 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from typing import List
+from datetime import datetime
+
 from backend.database.database import SessionLocal, engine, Base
 from backend.models.user import User
 from backend.schemas.user import UserCreate
-from datetime import datetime
+from backend.schemas.user import UserOut
 
-Base.metadata.create_all(bind=engine) #création table une fois
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-#Gestion session DB 
+#Gestion session DB
 def get_db():
     db = SessionLocal()
     try:
@@ -17,7 +20,15 @@ def get_db():
     finally:
         db.close()
 
-#Route ajout utilisateur
+
+
+#Routes
+@app.get("/")
+def read_root():
+    return {"message": "Backend is running "}
+
+#POST Ajout utilisateur
+@app.post("/users/", response_model=UserOut)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     birthdate = None
     if user.birthdate:
@@ -37,9 +48,12 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return {"message": "User added", "id": db_user.id}
+    return db_user
+
+# GET Tous les utilisateurs
+@app.get("/users/", response_model=List[UserOut])
+def read_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+    return users
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Backend de la serrure connectée opérationnel !"}
