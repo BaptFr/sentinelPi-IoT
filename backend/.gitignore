@@ -1,0 +1,56 @@
+# Python
+backend/__pycache__/
+backend/**/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+
+backend/venv/
+frontend/venv/
+
+
+# IDE/editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# SQLite database
+*.db
+backend/*.db
+
+# Logs
+*.log
+
+# Mac / Linux / Windows system files
+.DS_Store
+Thumbs.db
+
+# Pytest cache
+.pytest_cache/
+backend/.pytest_cache/
+.mypy_cache/
+backend/.mypy_cache/
+
+# Coverage reports
+htmlcov/
+coverage.xml
+*.cover
+
+# MyPy
+.mypy_cache/
+
+# Pydantic cache
+*.mypy_cache/
+
+# FastAPI auto-generated docs cache (if used)
+openapi.json
+
+# System
+.DS_Store
+Thumbs.db

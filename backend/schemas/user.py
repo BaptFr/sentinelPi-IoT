@@ -1,19 +1,19 @@
 from pydantic import BaseModel
 from typing import Optional
+from uuid import UUID
+from backend.models.enums import UserRole
 
 class UserCreate(BaseModel):
     lastname: str
     firstname: str
-    birthdate: Optional[str]  #format de date ???
     fingerprint: Optional[str]
     face_data: Optional[str]
-    role: Optional[str] = "user"
+    role: UserRole
 
 class UserOut(BaseModel):
-    id: int
+    id: UUID
     lastname: str
     firstname: str
-    birthdate: Optional[str]
     fingerprint: Optional[str]
     face_data: Optional[str]
     role: Optional[str]
@@ -21,3 +21,9 @@ class UserOut(BaseModel):
     model_config = {
         "from_attributes": True
     }
+class UserUpdate(BaseModel):
+    lastname: str
+    firstname: str
+    fingerprint: Optional[str]
+    face_data: Optional[str]
+    role: Optional[str]
