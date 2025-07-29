@@ -1,8 +1,9 @@
 import uuid
 from uuid import UUID
-from sqlalchemy.dialects.sqlite import BLOB
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, String
+from sqlalchemy.types import Enum as SQLAlchemyEnum
 from backend.database.database import Base
+from backend.models.enums import UserRole
 
 class User(Base):
     __tablename__ = "users"
@@ -12,5 +13,4 @@ class User(Base):
     firstname = Column(String, nullable=False)
     fingerprint = Column(String, nullable=True)
     face_data = Column(String, nullable=True)
-    role = Column(String, nullable=True)
-    
+    role = Column(SQLAlchemyEnum(UserRole), nullable=False)
