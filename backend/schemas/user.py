@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
-
+from uuid import UUID
 
 class UserCreate(BaseModel):
     lastname: str
@@ -10,7 +10,7 @@ class UserCreate(BaseModel):
     role: Optional[str] = "user"
 
 class UserOut(BaseModel):
-    id: int
+    id: UUID
     lastname: str
     firstname: str
     fingerprint: Optional[str]
@@ -20,3 +20,4 @@ class UserOut(BaseModel):
     model_config = {
         "from_attributes": True
     }
+    
