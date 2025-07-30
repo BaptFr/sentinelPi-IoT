@@ -4,20 +4,29 @@ from typing import List
 from uuid import UUID
 
 from backend.database.database import get_db
-from backend.models.user import User
-from backend.schemas.user import UserCreate, UserOut, UserUpdate
+from backend.models.admins import Admin
+from backend.models.lock_users import User
+from backend.schemas.lock_user import UserCreate, UserOut, UserUpdate
+from backend.security.oauth2 import get_current_admin
 
-router = APIRouter(prefix="/users", tags=["users"])
+
+router = APIRouter(prefix="/lock-users", tags=["lock-users"])
 
 #GET all users
 @router.get("/", response_model=List[UserOut])
-def read_users(db: Session = Depends(get_db)):
+def read_users(
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
     users = db.query(User).all()
     return users
 
 #POST Add user
 @router.post("/", response_model=UserOut)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
+def create_user(
+    user: UserCreate, db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
     db_user = User(
         lastname=user.lastname,
         firstname=user.firstname,
@@ -32,7 +41,10 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 #GET ONE user by id
 @router.get("/{user_id}", response_model=UserOut)
-def read_user(user_id: str, db: Session = Depends(get_db)):
+def read_user(
+    user_id: str, db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
     user = db.query(User).filter(User.id == str(user_id)).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -40,7 +52,11 @@ def read_user(user_id: str, db: Session = Depends(get_db)):
 
 #UPDATE ONE user
 @router.put("/{user_id}", response_model=UserOut)
-def update_user(user_id: str, user_update: UserUpdate, db: Session = Depends(get_db)):
+def update_user(
+    user_id: str, user_update: UserUpdate,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
     #Get by id
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -56,7 +72,11 @@ def update_user(user_id: str, user_update: UserUpdate, db: Session = Depends(get
 
 #DELETE ONE user
 @router.delete("/{user_id}", response_model=UserOut)
-def delete_user(user_id: str, db: Session = Depends(get_db)):
+def delete_user(
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin)
+):
 
     user= db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -66,5 +86,3 @@ def delete_user(user_id: str, db: Session = Depends(get_db)):
     db.delete(user)
     db.commit()
     return user
-
-#commentaire controle du push 29/07  XXXXXXXXXXXX

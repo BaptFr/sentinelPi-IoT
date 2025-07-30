@@ -58,9 +58,9 @@ Types de commit valides :
 
 Exemples de commit:
 
-- `feat: ajout du formulaire de contact`
-- `fix: correction du bug de navigation`
-- `docs: mise à jour du guide de contribution`
+- `Feat: ajout du formulaire de contact`
+- `Fix: correction du bug de navigation`
+- `Docs: mise à jour du guide de contribution`
 
 
 

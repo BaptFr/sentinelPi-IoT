@@ -9,8 +9,8 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
-    lastname = Column(String, unique=True, index=True, nullable=False)
+    lastname = Column(String, index=True, nullable=False)
     firstname = Column(String, nullable=False)
     fingerprint = Column(String, nullable=True)
     face_data = Column(String, nullable=True)
-    role = Column(SQLAlchemyEnum(UserRole), nullable=False)
+    role = Column(SQLAlchemyEnum(UserRole), nullable=False, default=UserRole.user)
