@@ -24,7 +24,7 @@ frontend/venv/
 # SQLite database
 *.db
 backend/*.db
-
+.db
 # Logs
 *.log
 
@@ -49,7 +49,7 @@ coverage.xml
 # Pydantic cache
 *.mypy_cache/
 
-# FastAPI auto-generated docs cache (if used)
+# FastAPI 
 openapi.json
 
 # System

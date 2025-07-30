@@ -1,13 +1,13 @@
 import os
 from sqlalchemy.orm import Session
+
 from backend.models.admins import Admin
 from backend.models.enums import UserRole
 from backend.security.hashing import hash_password
+from backend.core.config import settings 
 
 def init_admin(db: Session):
-    from dotenv import load_dotenv
-    load_dotenv()
-
+    
     default_email = os.getenv("DEFAULT_ADMIN_EMAIL")
     default_password = os.getenv("DEFAULT_ADMIN_PASSWORD")
 

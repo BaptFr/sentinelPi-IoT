@@ -1,14 +1,17 @@
 from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 45
-    database_url: str
-    default_admin_email: str
-    default_admin_password: str
-    admin_email: str
-    admin_password: str
+    DATABASE_URL: str
+    DEFAULT_ADMIN_EMAIL: str
+    DEFAULT_ADMIN_PASSWORD: str
+    ADMIN_EMAIL: str
+    ADMIN_PASSWORD: str
 
     class Config:
         env_file = ".env"

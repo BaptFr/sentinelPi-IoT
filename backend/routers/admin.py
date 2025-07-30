@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 
 from backend.models.admins import Admin
-from backend.schemas.admin import AdminCreate, AdminOut, AdminLogin, TokenOut
+from backend.schemas.admin import AdminCreate, AdminOut, AdminLogin, TokenOut, AdminUpdate
 from backend.models.enums import UserRole
 from backend.database.database import get_db
 from backend.security.hashing import hash_password, verify_password
@@ -34,7 +34,10 @@ def register_admin(admin: AdminCreate, db: Session = Depends(get_db)):
 
 #Login Admin
 @router.post("/login", response_model=TokenOut)
-def login_admin(admin_login: AdminLogin, db: Session = Depends(get_db)):
+def login_admin(
+    admin_login: AdminLogin, 
+    db: Session = Depends(get_db)
+    ):
     # Find Admin by email
     admin = db.query(Admin).filter(Admin.email == admin_login.email).first()
     if not admin:
@@ -49,7 +52,34 @@ def login_admin(admin_login: AdminLogin, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-#Login Get
+# Get current Admin
 @router.get("/profile")
 def read_profile(current_admin: Admin = Depends(get_current_admin)):
     return current_admin
+
+#UPDATE Admin
+@router.put("/profile")
+def update_admin(
+    admin_update: AdminUpdate,
+    db: Session = Depends(get_db),
+    current_admin: Admin = Depends(get_current_admin),
+):
+    #Connected Admin
+    admin = db.query(Admin).filter(Admin.id == current_admin.id).first()
+    if not admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+
+    
+    if admin_update.email:
+        admin.email = admin_update.email
+    if admin_update.firstname:
+        admin.firstname = admin_update.firstname
+    if admin_update.lastname:
+        admin.lastname = admin_update.lastname
+    if admin_update.password:
+        admin.hashed_password = hash_password(admin_update.password)
+
+    db.commit()
+    db.refresh(admin)
+    return {"message": "Admin updated successfully "}
+
