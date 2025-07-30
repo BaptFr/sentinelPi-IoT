@@ -1,49 +1,27 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from backend.routers import users
+from backend.routers.admin import router as admin_router
+from backend.routers.lock_users import router as lock_users_router
 from backend.database.database import SessionLocal, engine, Base
+from backend.core.init_admin import init_admin
 
 #DB table creation
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+@asynccontextmanager
+#Admin ? | Default Admin
+async def lifespan(app: FastAPI):
+    with SessionLocal() as db:
+        init_admin(db)
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 #Routes
-app.include_router(users.router)
+app.include_router(admin_router)
+app.include_router(lock_users_router)
 
 #Root
 @app.get("/")
 def read_root():
     return {"message": "Backend is running "}
-
-# #POST Ajout utilisateur
-# @app.post("/users/", response_model=UserOut)
-# def create_user(user: UserCreate, db: Session = Depends(get_db)):
-
-#     db_user = User(
-#         lastname=user.lastname,
-#         firstname=user.firstname,
-#         role=user.role,
-#         fingerprint=user.fingerprint,
-#         face_data=user.face_data
-#     )
-#     db.add(db_user)
-#     db.commit()
-#     db.refresh(db_user)
-#     return db_user
-
-
-
-# # GET un utilisateur by id
-# @app.get("/users/{user_id}", response_model=UserOut)
-# def read_user(user_id: str, db: Session = Depends(get_db)):
-#     try:
-#         # Vérifie que l'user_id est bien un UUID
-#         uid = UUID(user_id)
-#     except ValueError:
-#         raise HTTPException(status_code=400, detail="Invalid UUID format")
-
-#     db_user = db.query(User).filter(User.id == str(uid)).first()
-#     if db_user is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return db_user
-

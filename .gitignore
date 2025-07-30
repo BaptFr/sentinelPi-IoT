@@ -13,6 +13,7 @@ env/
 backend/venv/
 frontend/venv/
 
+.env
 
 # IDE/editor files
 .vscode/
