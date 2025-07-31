@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, Form, File
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
+import shutil
+import uuid
+import os
 
 from backend.database.database import get_db
 from backend.models.admins import Admin
@@ -23,17 +27,35 @@ def read_users(
 
 #POST Add user
 @router.post("/", response_model=UserOut)
-def create_user(
-    user: UserCreate, db: Session = Depends(get_db),
+async def create_user(
+    firstname: str = Form(...),
+    lastname: str = Form(...),
+    role: str = Form(...),
+    fingerprint: UploadFile = File(...),
+    face_data: UploadFile = File(...),
+  
+    db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
+    #Name generation for files
+    fingerprint_filename = f"fingerprints/{uuid.uuid4()}.{fingerprint.filename.split('.')[-1]}"
+    face_filename = f"faces/{uuid.uuid4()}.{face_data.filename.split('.')[-1]}"
+
+    #File local saving
+    with open(f"uploads/{fingerprint_filename}", "wb") as fp:
+        shutil.copyfileobj(fingerprint.file, fp)
+    with open(f"uploads/{face_filename}", "wb") as fp:
+        shutil.copyfileobj(face_data.file, fp)
+
     db_user = User(
-        lastname=user.lastname,
-        firstname=user.firstname,
-        role=user.role,
-        fingerprint=user.fingerprint,
-        face_data=user.face_data
+        lastname=lastname,
+        firstname=firstname,
+        role=role,
+        fingerprint_path=f"/uploads/{fingerprint_filename}",
+        face_data_path=f"/uploads/{face_filename}"
     )
+
+
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

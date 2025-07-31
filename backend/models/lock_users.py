@@ -11,6 +11,6 @@ class User(Base):
     id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
     lastname = Column(String, index=True, nullable=False)
     firstname = Column(String, nullable=False)
-    fingerprint = Column(String, nullable=True)
-    face_data = Column(String, nullable=True)
+    fingerprint_path = Column(String, nullable=True)
+    face_data_path = Column(String, nullable=True)
     role = Column(SQLAlchemyEnum(UserRole), nullable=False, default=UserRole.user)

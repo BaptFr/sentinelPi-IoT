@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modifier Administrateur</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <form id="modifierAdminForm">
+    <h2>🔧 Modifier Administrateur</h2>
+
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom" required />
+
+    <label for="prenom">Prénom :</label>
+    <input type="text" id="prenom" name="prenom" required />
+
+    <label for="email">Email :</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="couleur">Couleur préférée :</label>
+    <input type="color" id="couleur" name="couleur" />
+
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="notifConnexionReussie" /> Recevoir une notification à chaque connexion réussie</label>
+      <label><input type="checkbox" id="notifConnexionErreur" /> Recevoir une notification à chaque connexion erreur</label>
+      <label><input type="checkbox" id="mailConnexionReussie" /> Recevoir un mail à chaque connexion réussie</label>
+      <label><input type="checkbox" id="mailConnexionErreur" /> Recevoir un mail à chaque connexion erreur</label>
+    </div>
+
+    <label for="photo">Photo :</label>
+    <input type="file" id="photo" name="photo" accept="image/*" />
+
+    <label for="empreinte">Empreinte :</label>
+    <input type="file" id="empreinte" name="empreinte" accept="image/*" />
+
+    <button type="submit">💾 Enregistrer</button>
+  </form>
+
+  <script> const API_URL = "http://127.0.0.1:8000"</script>
+  <script src="js/modifier-admin.js"></script>
+</body>
+</html>
