@@ -12,6 +12,13 @@ h1, h2 {
   padding: 10px 0;
 }
 
+h2 {
+  margin-top: 50px;
+}
+
+button:hover {
+  cursor: pointer;
+}
 .admin-container, .add-user-container {
   max-width: 1000px;
   margin: auto;
@@ -22,7 +29,7 @@ h1, h2 {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin: 20px 10px;
   background-color: white;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
@@ -39,24 +46,15 @@ thead {
 }
 
 /* ==== Images ==== */
-.user-photo {
+/* .picture {
   width: 60px;
   height: 60px;
   object-fit: cover;
   border-radius: 6px;
   border: 2px solid #ccc;
-}
+} */
 
-/* ==== Couleur associée ==== */
-.color-box {
-  width: 30px;
-  height: 30px;
-  border-radius: 4px;
-  border: 1px solid #999;
-  margin: auto;
-}
-
-/* Historique Connexion */
+/* Logs */
 .ligne {
   margin: 8px 0;
   font-size: 15px;
@@ -71,7 +69,7 @@ thead {
   vertical-align: middle;
 }
 
-/* Historique Container */
+/* Logs Container */
 #historique {
   margin-top: 20px;
   border-top: 1px solid #ccc;
@@ -132,15 +130,35 @@ label {
   font-weight: bold;
 }
 
+.form-text{
+  font-weight: bold;
+  font-style: italic;
+}
+
 input[type="text"],
 input[type="date"],
-input[type="color"],
+input[type="password"],
+input[type="email"],
 input[type="file"] {
   padding: 8px;
   border: 1px solid #aaa;
   border-radius: 6px;
   width: 100%;
 }
+
+.return-btn {
+  margin: 10px 50px;
+  padding: 8px;
+  background-color: #0066cc;
+  color: #ffffff;
+  font-weight: bold;
+  border-radius: 10px;
+  border: 0;
+}
+.return-btn:hover {
+  transform: scale(1.05);
+}
+
 
 button#submitBtn {
   background-color: #28a745;
@@ -249,6 +267,9 @@ form#modifierAdminForm label {
   margin-top: 12px;
 }
 
+#modifierForm label{
+  margin-top: 20px;
+}
 .checkbox-group {
   margin-top: 12px;
 }

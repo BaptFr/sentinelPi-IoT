@@ -44,20 +44,14 @@ async function chargerUtilisateurs() {
     } else {
       utilisateurs.forEach(user => {
         const tr = document.createElement("tr");
-
+        console.log(user)
         tr.innerHTML = `
           <td>${user.lastname}</td>
           <td>${user.firstname}</td>
+          <td>${user.face_data_path ? '✅' : '❌'}</td>
+          <td>${user.fingerprint_path ? '✅' : '❌'}</td>
           <td>
-            <img src="${user.photoURL}" alt="photo" width="50" />
-            <input type="file" accept="image/*" onchange="modifierMediaUtilisateur('${user.id}', 'photo', this.files[0])" />
-          </td>
-          <td>
-            <img src="${user.empreinteURL}" alt="empreinte" width="50" />
-            <input type="file" accept="image/*" onchange="modifierMediaUtilisateur('${user.id}', 'empreinte', this.files[0])" />
-          </td>
-          <td>
-            <button onclick="modifierUtilisateur('${user.id}')">✏️</button>
+            <button onclick="window.location.href='modifier-utilisateur.html?id=${user.id}'">✏️</button>
             <button onclick="supprimerUtilisateur('${user.id}')">🗑️</button>
           </td>
         `;
@@ -82,8 +76,8 @@ async function modifierMediaUtilisateur(id, type, fichier) {
   formData.append(type, fichier);
 
   try {
-    const response = await fetch(`https://URL_API/utilisateurs/${id}/${type}`, {
-      method: "PATCH",
+    const response = await fetch(API_URL+ "/${id}/${type}", {
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -123,11 +117,11 @@ async function chargerHistorique() {
     historique.forEach(item => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${item.nom}</td>
-        <td>${item.prenom}</td>
+        <td>${item.lastname}</td>
+        <td>${item.firstname}</td>
         <td>${item.date}</td>
         <td>${item.heure}</td>
-        <td>${item.resultat}</td>
+        <td>${item.result}</td>
       `;
       historyList.appendChild(tr);
     });
@@ -165,7 +159,7 @@ function modifierUtilisateur(id) {
 
 async function supprimerUtilisateur(id) {
   const token = sessionStorage.getItem("token");
-  if (!confirm("Supprimer cet utilisateur ?")) return;
+  if (!confirm("ÊTES-VOUS SÛR DE VOULOIR SUPPRIMER CET UTILISATEUR ?")) return;
 
   try {
     const response = await fetch(API_URL + `/lock-users/${id}`, {
@@ -176,12 +170,17 @@ async function supprimerUtilisateur(id) {
     });
 
     if (response.ok) {
-      alert("Utilisateur supprimé.");
+      alert("Utilisateur supprimé");
       chargerUtilisateurs();
     } else {
-      alert("Erreur lors de la suppression.");
+      alert("Erreur lors de la suppression");
     }
   } catch (error) {
-    console.error("Erreur suppression :", error);
+    console.error("supresion error:", error);
   }
+}
+
+function deconnexion() {
+  sessionStorage.removeItem("token");
+  window.location.href = "login.html";
 }

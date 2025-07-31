@@ -72,25 +72,44 @@ def read_user(
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+
 #UPDATE ONE user
 @router.put("/{user_id}", response_model=UserOut)
 def update_user(
-    user_id: str, user_update: UserUpdate,
+    user_id: str,
+    firstname: str = Form(...),
+    lastname: str = Form(...),
+    fingerprint: UploadFile = File(None),
+    face_data: UploadFile = File(None),
+
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
+    
     #Get by id
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    updates = user_update.model_dump(exclude_unset=True)
-    for key, value in updates.items():
-        setattr(user, key, value)
+    user.firstname = firstname
+    user.lastname = lastname
+    user.role = "user"  
+    if fingerprint:
+        fingerprint_filename = f"fingerprints/{uuid.uuid4()}.{fingerprint.filename.split('.')[-1]}"
+        with open(f"uploads/{fingerprint_filename}", "wb") as fp:
+            shutil.copyfileobj(fingerprint.file, fp)
+        user.fingerprint_path = f"/uploads/{fingerprint_filename}"
+
+    if face_data:
+        face_filename = f"faces/{uuid.uuid4()}.{face_data.filename.split('.')[-1]}"
+        with open(f"uploads/{face_filename}", "wb") as fp:
+            shutil.copyfileobj(face_data.file, fp)
+        user.face_data_path = f"/uploads/{face_filename}"
 
     db.commit()
     db.refresh(user)
     return user
+
 
 #DELETE ONE user
 @router.delete("/{user_id}", response_model=UserOut)

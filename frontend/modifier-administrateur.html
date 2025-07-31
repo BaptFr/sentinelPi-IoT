@@ -7,33 +7,28 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+   <div> 
+    <button class="return-btn"> Retour au tableau de bord</button>
+  </div>
   <form id="modifierAdminForm">
     <h2>🔧 Modifier Administrateur</h2>
 
-    <label for="nom">Nom :</label>
-    <input type="text" id="nom" name="nom" required />
+     <label for="lastname">Nom :</label>
+    <input type="text" id="lastname" name="nom" required />
 
-    <label for="prenom">Prénom :</label>
-    <input type="text" id="prenom" name="prenom" required />
+    <label for="firstname">Prénom :</label>
+    <input type="text" id="firstname" name="prenom" required />
 
-    <label for="email">Email :</label>
+    <label for="email">EMAIL DE CONNECTION </label>
     <input type="email" id="email" name="email" required />
 
-    <label for="couleur">Couleur préférée :</label>
-    <input type="color" id="couleur" name="couleur" />
+    <label for="password">MOT DE PASSE DE CONNECTION :</label>
+    <small class="form-text">Laisser vide pour conserver le mot de passe actuel</small>
+    <input type="password" id="password" name="password" required />
 
-    <div class="checkbox-group">
-      <label><input type="checkbox" id="notifConnexionReussie" /> Recevoir une notification à chaque connexion réussie</label>
-      <label><input type="checkbox" id="notifConnexionErreur" /> Recevoir une notification à chaque connexion erreur</label>
-      <label><input type="checkbox" id="mailConnexionReussie" /> Recevoir un mail à chaque connexion réussie</label>
-      <label><input type="checkbox" id="mailConnexionErreur" /> Recevoir un mail à chaque connexion erreur</label>
-    </div>
-
-    <label for="photo">Photo :</label>
-    <input type="file" id="photo" name="photo" accept="image/*" />
-
-    <label for="empreinte">Empreinte :</label>
-    <input type="file" id="empreinte" name="empreinte" accept="image/*" />
+    <label for="password">CONFIRMATION DE MOT DE PASSE : </label>
+    <small class="form-text">Laisser vide si vous n'avez pas modifier le mot de passe</small>
+    <input type="password" id="confirmPassword" name="password" />
 
     <button type="submit">💾 Enregistrer</button>
   </form>

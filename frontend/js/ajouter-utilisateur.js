@@ -65,11 +65,9 @@ submitBtn.addEventListener("click", async () => {
     const result = await response.json();
 
     if (response.ok) {
-    
       document.querySelector("form").reset();
       submitBtn.disabled = true;
       window.location.href = "admin.html";
-       alert("Utilisateur ajouté avec succès !");
     } else {
       console.error("Erreur backend :", result); 
       alert(result.detail || result.message || "Erreur lors de l'ajout.");
@@ -79,3 +77,10 @@ submitBtn.addEventListener("click", async () => {
     alert("Une erreur est survenue.");
   }
 });
+ 
+const btn = document.querySelector(".return-btn");
+if (btn) {
+  btn.addEventListener("click", () => {
+    window.location.href = "admin.html";
+  });
+}

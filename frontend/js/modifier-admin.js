@@ -7,45 +7,67 @@ if (!token) {
   window.location.href = "login.html";
 }
 
+
+//Previous infos recuperation for form 
+window.addEventListener("DOMContentLoaded", () => {
+  fetch(`${API_URL}/admin/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Impossible de charger les infos admin");
+      return res.json();
+    })
+    .then((admin) => {
+      if (admin.firstname) document.getElementById("firstname").value = admin.firstname;
+      if (admin.lastname) document.getElementById("lastname").value = admin.lastname;
+      if (admin.email) document.getElementById("email").value = admin.email;
+      if (admin.mailConnexionErreur !== undefined) {
+      }
+    })
+    .catch((err) => {
+      alert(err.message);
+      window.location.href = "admin.html";
+    });
+});
+
 document.getElementById("modifierAdminForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
   const lastname = document.getElementById("lastname").value.trim();
   const firstname = document.getElementById("firstname").value.trim();
   const email = document.getElementById("email").value.trim();
-  const fingerprint = document.getElementById("photo").files[0];
-  const face_data = document.getElementById("empreinte").files[0];
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
 
-  const notifConnexionReussie = document.getElementById("notifConnexionReussie").checked;
-  const notifConnexionErreur = document.getElementById("notifConnexionErreur").checked;
-  const mailConnexionReussie = document.getElementById("mailConnexionReussie").checked;
-  const mailConnexionErreur = document.getElementById("mailConnexionErreur").checked;
+  //Password confirmation  if juste one is modified or modified but not the same
 
-  const formData = new FormData();
-  formData.append("lastname", lastname);
-  formData.append("firstname", firstname);
-  formData.append("email", email);
-  formData.append("notifConnexionReussie", notifConnexionReussie);
-  formData.append("notifConnexionErreur", notifConnexionErreur);
-  formData.append("mailConnexionReussie", mailConnexionReussie);
-  formData.append("mailConnexionErreur", mailConnexionErreur);
-
-  if (photo) {
-    formData.append("face_data", face_data);
+  if (password && confirmPassword && password !== confirmPassword) {
+    alert("Les mots de passe ne correspondent pas.");
+    return;
   }
 
-  if (empreinte) {
-    formData.append("fingerprint", fingerprint);
+  const dataToSend = {
+    lastname,
+    firstname,
+    email,
+  };
+  if (password) {
+    dataToSend.password = password;
   }
+
 
   try {
     
-    const response = await fetch(URL + "/admin/:id", {
+    const response = await fetch( API_URL + "/admin/profile", {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token}` 
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+
       },
-      body: formData,
+      body: JSON.stringify(dataToSend),
     });
 
     const result = await response.json();
@@ -53,7 +75,6 @@ document.getElementById("modifierAdminForm").addEventListener("submit", async fu
     if (response.ok) {
       document.getElementById("modifierAdminForm").reset();
       window.location.href = "admin.html";
-      alert("Modification enregistrée avec succès !");
     } else {
       alert(result.message || "Erreur lors de la modification.");
     }
@@ -62,3 +83,13 @@ document.getElementById("modifierAdminForm").addEventListener("submit", async fu
     alert("Une erreur est survenue lors de l'envoi.");
   }
 });
+
+const btn = document.querySelector(".return-btn");
+if (btn) {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("modifierAdminForm").reset();
+    window.location.href = "admin.html";
+  });
+}
+
