@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modifier Administrateur</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+   <div> 
+    <button class="return-btn"> Retour au tableau de bord</button>
+  </div>
+  <form id="modifierAdminForm">
+    <h2>🔧 Modifier Administrateur</h2>
+
+     <label for="lastname">Nom :</label>
+    <input type="text" id="lastname" name="nom" required />
+
+    <label for="firstname">Prénom :</label>
+    <input type="text" id="firstname" name="prenom" required />
+
+    <label for="email">EMAIL DE CONNECTION </label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="password">MOT DE PASSE DE CONNECTION :</label>
+    <small class="form-text">Laisser vide pour conserver le mot de passe actuel</small>
+    <input type="password" id="password" name="password" />
+
+    <label for="password">CONFIRMATION DE MOT DE PASSE : </label>
+    <small class="form-text">Laisser vide si vous n'avez pas modifier le mot de passe</small>
+    <input type="password" id="confirmPassword" name="password" />
+
+    <button type="submit">💾 Enregistrer</button>
+  </form>
+
+  <script src="app.js"></script>
+  <script src="js/modifier-admin.js"></script>
+</body>
+</html>

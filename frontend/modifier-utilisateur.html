@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modifier Utilisateur</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+   <div> 
+    <button  class="return-btn"> Retour au tableau de bord</button>
+  </div>
+  <form id="modifierForm">
+    <h2>🔧 Modifier Utilisateur</h2>
+
+    <label for="lastname">Nom :</label>
+    <input type="text" id="lastname" name="nom" required />
+
+    <label for="firstname">Prénom :</label>
+    <input type="text" id="firstname" name="prenom" required />
+
+    <label for="face_data">Photo :</label>
+    <small class="form-text">Laisser vide pour conserver l’empreinte actuelle</small>
+    <input type="file" id="face_data" name="photo" accept="image/*" />
+
+    <label for="fingerprint">Empreinte :</label>
+    <small class="form-text">Laisser vide pour conserver l’empreinte actuelle</small>
+    <input type="file" id="fingerprint" name="empreinte" accept="image/*" />
+    
+
+    <button type="submit">💾 Enregistrer</button>
+  </form>
+
+  <script src="app.js"></script>
+  <script src="js/modifier-utilisateur.js"></script>
+</body>
+</html>

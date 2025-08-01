@@ -12,9 +12,12 @@ class Settings(BaseSettings):
     DEFAULT_ADMIN_PASSWORD: str
     ADMIN_EMAIL: str
     ADMIN_PASSWORD: str
+    API_URL: str
+
 
     class Config:
         env_file = ".env"
+        extra = "forbid"
 
 settings = Settings()
 

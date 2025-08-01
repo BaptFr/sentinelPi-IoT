@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1>Bonjour 👋</h1>   
+      <button onclick="window.location.href='ajouter-utilisateur.html'">➕ Ajouter un utilisateur</button>
+      <button onclick="window.location.href='modifier-administrateur.html'">✏️ Modifier Admin</button>
+      <button onclick="deconnexion()">🚪 Déconnexion</button>
+    </div>
+    <h2>Utilisateurs</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Photo</th>
+          <th>Empreinte</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="user-list"></tbody>
+    </table>
+
+    <h2>Historique des connexions</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Date</th>
+          <th>Heure</th>
+          <th>Résultat</th>
+        </tr>
+      </thead>
+      <tbody id="history-list"></tbody>
+    </table>
+
+    <button class="vider-historique-btn" onclick="viderHistorique()">🧹 Vider l’historique</button>
+  </div>
+  <script src="app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
