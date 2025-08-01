@@ -1,23 +1,33 @@
-
-//ID recuperation
-const urlParams = new URLSearchParams(window.location.search);
-const userId = urlParams.get("id");
-
-if (!userId) {
-    alert("Aucun utilisateur sélectionné");
-}
-
-//Admin token connection control
-const token = sessionStorage.getItem("token");
-if (!token) {
-  alert("Session expirée ou accès interdit. Veuillez vous reconnecter.");
-  window.location.href = "login.html";
-}
-
-//User id recuperation
-window.addEventListener("DOMContentLoaded", () => {
+//Config Api:
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("config.json")
+    .then(res => res.json())
+    .then(config => {
+      window.API_URL = config.API_URL;
+      initPage();
+    })
+    .catch(err => {
+      console.error("config.json loading error :", err);
+      alert("Erreur lors du chargement de la configuration. Veuillez réessayer plus tard.");
+    });
+});
+function initPage() {
+  //ID recuperation
   const urlParams = new URLSearchParams(window.location.search);
   const userId = urlParams.get("id");
+
+  if (!userId) {
+      alert("Aucun utilisateur sélectionné");
+  }
+
+  //Admin token connection control
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    alert("Session expirée ou accès interdit. Veuillez vous reconnecter.");
+    window.location.href = "login.html";
+  }
+
+  //User id recuperation
   if (!userId) {
     alert("Aucun utilisateur sélectionné");
     window.location.href = "admin.html";
@@ -52,7 +62,7 @@ window.addEventListener("DOMContentLoaded", () => {
       window.location.href = "admin.html";
     });
 
-  document.getElementById("modifierUserForm").addEventListener("submit", async function (e) {
+  document.getElementById("modifierForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const lastname = document.getElementById("lastname").value.trim();
@@ -85,23 +95,23 @@ window.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
-        document.getElementById("modifierUserForm").reset();
+        document.getElementById("modifierForm").reset();
         window.location.href = "admin.html";
       } else {
         const result = await response.json();
         alert(result.message || "Erreur lors de la modification.");
       }
     } catch (error) {
-      console.error("Erreur API :", error);
-      alert("Une erreur est survenue lors de l'envoi.");
+      console.error("Erreur API complète :", error);
+      alert("Une erreur est survenue lors de l'envoi : " + (error.message || JSON.stringify(error)));
     }
   });
-});
+  
 
-const btn = document.querySelector(".return-btn");
-if (btn) {
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    window.location.href = "admin.html";
-  });
+  const btn = document.querySelector(".return-btn");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      window.location.href = "admin.html";
+    });
+  }
 }
