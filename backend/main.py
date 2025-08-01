@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from backend.routers.admin import router as admin_router
 from backend.routers.lock_users import router as lock_users_router
+# from backend.routers.biometrics import router as biometrics_router
 from backend.database.database import SessionLocal, engine, Base
 from backend.core.init_admin import init_admin
 
@@ -35,6 +36,8 @@ app.add_middleware(
 #Routes
 app.include_router(admin_router)
 app.include_router(lock_users_router)
+# app.include_router(biometrics_router)
+
 
 #Root
 @app.get("/")
