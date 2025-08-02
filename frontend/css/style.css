@@ -160,7 +160,7 @@ input[type="file"] {
 }
 
 
-button#submitBtn {
+button#addUserSubmitBtn, button#enrollmentSubmitBtn {
   background-color: #28a745;
   color: white;
   border: none;
@@ -171,12 +171,12 @@ button#submitBtn {
   transition: background 0.3s;
 }
 
-button#submitBtn:disabled {
+button#addUserSubmitBtn:disabled, button#enrollmentSubmitBtn:disabled {
   background-color: #aaa;
   cursor: not-allowed;
 }
 
-button#submitBtn:hover:not(:disabled) {
+bbutton#addUserSubmitBtn:hover:not(:disabled), button#enrollmentSubmitBtn:hover:not(:disabled) {
   background-color: #218838;
 }
 

@@ -1,12 +1,9 @@
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 
 from backend.core.config import settings
 from backend.schemas.admin import AdminTokenData
-from backend.models.admins import Admin
 
 
 SECRET_KEY = settings.SECRET_KEY

@@ -12,13 +12,13 @@ window.addEventListener("configLoaded", () => {
     const token = sessionStorage.getItem("token");
     if (!token) {
       alert("Session expirée. Veuillez vous reconnecter.");
-      window.location.href = "index.html";
+      window.location.href ="login.html";
     }
   }
 
   function deconnexion() {
     sessionStorage.removeItem("token");
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   }
 
   async function chargerUtilisateurs() {
