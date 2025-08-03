@@ -110,7 +110,8 @@ function initPage() {
 
   const btn = document.querySelector(".return-btn");
   if (btn) {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
+       e.preventDefault();
       window.location.href = "admin.html";
     });
   }

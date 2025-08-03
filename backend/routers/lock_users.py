@@ -31,7 +31,6 @@ async def create_user(
     firstname: str = Form(...),
     lastname: str = Form(...),
     role: str = Form(...),
-    fingerprint_id: str = Form(...),
     face_data: UploadFile = File(...),
   
     db: Session = Depends(get_db),
@@ -48,7 +47,6 @@ async def create_user(
         lastname=lastname,
         firstname=firstname,
         role=role,
-        fingerprint_id=fingerprint_id,
         face_data_path=f"/uploads/{face_filename}"
     )
 
@@ -76,7 +74,6 @@ def update_user(
     user_id: str,
     firstname: str = Form(...),
     lastname: str = Form(...),
-    fingerprint_id: str = Form(...),
     face_data: UploadFile = File(None),
 
     db: Session = Depends(get_db),
@@ -91,8 +88,7 @@ def update_user(
     user.firstname = firstname
     user.lastname = lastname
     user.role = "user"  
-    user.fingerprint_id = fingerprint_id
-
+    
     if face_data:
         face_filename = f"faces/{uuid.uuid4()}.{face_data.filename.split('.')[-1]}"
         with open(f"uploads/{face_filename}", "wb") as fp:

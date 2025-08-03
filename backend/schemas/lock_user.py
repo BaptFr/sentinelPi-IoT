@@ -6,8 +6,8 @@ from backend.models.enums import UserRole
 class UserCreate(BaseModel):
     lastname: str
     firstname: str
-    fingerprint_id: str
-    face_data_path: Optional[str]
+    fingerprint_id: Optional[str] = None  #TEMP !!
+    face_data_path: Optional[str] = None  #TEMP !!
     role: UserRole = UserRole.user
 
 class EnrollmentConfirm(BaseModel):
@@ -18,9 +18,9 @@ class UserOut(BaseModel):
     id: UUID
     lastname: str
     firstname: str
-    fingerprint_id: str
-    face_data_path: Optional[str]
-    role: UserRole.user
+    fingerprint_id: Optional[str] = None # TEMP !!
+    face_data_path: Optional[str] = None  # TEMP !!
+    role: UserRole
 
     model_config = {
         "from_attributes": True

@@ -1,4 +1,4 @@
-//Config api
+//Config API
 window.addEventListener("configLoaded", () => {
   const firstnameCheck = document.getElementById("prenom")
   const lastnameCheck = document.getElementById("nom")
@@ -7,7 +7,6 @@ window.addEventListener("configLoaded", () => {
   const enrollmentSubmitBtn = document.getElementById("enrollmentSubmitBtn");
 
   function checkInputs() {
-
     if (firstnameCheck.value.trim() !=="" && lastnameCheck.value.trim() !=="") {
       enrollmentSubmitBtn.disabled = false;
     } else {
@@ -28,34 +27,62 @@ window.addEventListener("configLoaded", () => {
     firstnameCheck.addEventListener("input", checkInputs);
     lastnameCheck.addEventListener("input", checkInputs);
 
-  //Enrollment procedur click button
-  enrollmentSubmitBtn.addEventListener("click", async () => {
-    const firstname = document.getElementById("prenom").value.trim();
-    const lastname = document.getElementById("nom").value.trim();
-    const role = "user";
+  //******Enrollment procedur click button******
+    enrollmentSubmitBtn.addEventListener("click", async () => {
+      const firstname = document.getElementById("prenom").value.trim();
+      const lastname = document.getElementById("nom").value.trim();
+      const role = "user";
 
+      if (!firstname || !lastname) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
 
-    if (!firstname || !lastname) {
-      alert("Veuillez remplir tous les champs obligatoires.");
-      return;
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        alert("Session expirée. Veuillez vous reconnecter.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      //POST to enrollment process
+      try {
+      const response = await fetch(API_URL + "/enrollment/start", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({firstname, lastname, role})
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        alert("Session expirée. Veuillez vous reconnecter.");
+        sessionStorage.removeItem("token");
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result);
+        alert("Enrôlement d'empreinte initié.");
+      } else {
+        const result = await response.json();
+        alert(result.detail || result.message || "Erreur lors de la procédure l'enrôlement.");
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      alert("Une erreur est survenue.");
     }
+  });
 
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      alert("Session expirée. Veuillez vous reconnecter.");
-      window.location.href = "login.html";
-      return;
-    }
-  })
-
-
-
-    
-  //Add user click button
+    /****** A DEFINIR ??  ******/       
+  //Add user with face_data click button
   addUserSubmitBtn.addEventListener("click", async () => {
     const firstname = document.getElementById("prenom").value.trim();
     const lastname = document.getElementById("nom").value.trim();
-    const face_data = bioInput.files[0];
+    const face_data =  photoInput.files[0];
     const role = "user";
 
 
