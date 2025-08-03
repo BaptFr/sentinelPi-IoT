@@ -19,7 +19,7 @@ def generate_temporate_id():
     return str(uuid.uuid4())
 
 def send_to_raspberry(enrollment_id):
-    url = "http://respberry/start_enrollment"
+    url = "http://respberry/start_enrollment" #test
     data = {'enrollmentId': enrollment_id}
     response = requests.post(url, json=data)
 

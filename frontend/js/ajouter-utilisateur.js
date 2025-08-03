@@ -5,14 +5,16 @@ window.addEventListener("configLoaded", () => {
   const photoInput = document.getElementById("photoInput");
   const addUserSubmitBtn = document.getElementById("addUserSubmitBtn");
   const enrollmentSubmitBtn = document.getElementById("enrollmentSubmitBtn");
+  const status = document.getElementById("enrollment-status");
 
+  //Check functions for Submit button clickable
   function checkInputs() {
     if (firstnameCheck.value.trim() !=="" && lastnameCheck.value.trim() !=="") {
       enrollmentSubmitBtn.disabled = false;
     } else {
       enrollmentSubmitBtn.disabled = true;
     }
-  }
+  };
 
   function checkPhotoInput () {
     if (firstnameCheck.value.trim() !=="" && lastnameCheck.value.trim() !=="" & photoInput.files.length > 0 ) {
@@ -20,19 +22,21 @@ window.addEventListener("configLoaded", () => {
     } else {
       addUserSubmitBtn.disabled = true;
     }
-  }
+  };
 
+  //Event listeners
+  photoInput.addEventListener("change", checkPhotoInput);
+  firstnameCheck.addEventListener("input", checkInputs);
+  lastnameCheck.addEventListener("input", checkInputs);
 
-    photoInput.addEventListener("change", checkPhotoInput);
-    firstnameCheck.addEventListener("input", checkInputs);
-    lastnameCheck.addEventListener("input", checkInputs);
 
   //******Enrollment procedur click button******
     enrollmentSubmitBtn.addEventListener("click", async () => {
       const firstname = document.getElementById("prenom").value.trim();
       const lastname = document.getElementById("nom").value.trim();
       const role = "user";
-
+      
+      //Handle errors before submitting
       if (!firstname || !lastname) {
         alert("Veuillez remplir tous les champs obligatoires.");
         return;
@@ -45,6 +49,18 @@ window.addEventListener("configLoaded", () => {
         return;
       }
 
+      //Display for waiting process
+      status.classList.remove("hidden");
+      status.classList.add("visible");
+      enrollmentSubmitBtn.disabled = true;
+
+        // ENROLMENT TEMP  ****
+        // setTimeout(() => {
+        //   // message hiden"
+        //   status.classList.add("hidden");
+        //   alert("Procédure terminée !");
+        // }, 3000); 
+
       //POST to enrollment process
       try {
       const response = await fetch(API_URL + "/enrollment/start", {
@@ -53,7 +69,12 @@ window.addEventListener("configLoaded", () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({firstname, lastname, role})
+        body: JSON.stringify({
+          firstname, 
+          lastname, 
+          role
+        })
+        
       });
 
       if (response.status === 401 || response.status === 403) {
@@ -65,17 +86,26 @@ window.addEventListener("configLoaded", () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log(result);
-        alert("Enrôlement d'empreinte initié.");
+        console.log(result);       
+        //User create with infos      TODO***********************************************
       } else {
         const result = await response.json();
-        alert(result.detail || result.message || "Erreur lors de la procédure l'enrôlement.");
+        status.classList.add("hidden");
+        alert(result.detail || result.message || "Erreur lors de la procédure");
+        status.classList.remove("visible");
+        status.classList.add("hidden");
+        location.reload();
       }
     } catch (error) {
       console.error("API Error:", error);
       alert("Une erreur est survenue.");
+      status.classList.remove("visible");
+      status.classList.add("hidden");
+      location.reload();
     }
   });
+
+
 
     /****** A DEFINIR ??  ******/       
   //Add user with face_data click button
@@ -84,8 +114,6 @@ window.addEventListener("configLoaded", () => {
     const lastname = document.getElementById("nom").value.trim();
     const face_data =  photoInput.files[0];
     const role = "user";
-
-
 
     if (!firstname || !lastname) {
       alert("Veuillez remplir tous les champs obligatoires.");
@@ -104,6 +132,7 @@ window.addEventListener("configLoaded", () => {
     formData.append("lastname", lastname);
     formData.append("role", role);
     formData.append("face_data", face_data);
+    
     for (let pair of formData.entries()) {
     console.log(`${pair[0]}:`, pair[1]);
     }

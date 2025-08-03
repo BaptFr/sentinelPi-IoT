@@ -51,7 +51,7 @@ window.addEventListener("configLoaded", () => {
             <td>${user.lastname}</td>
             <td>${user.firstname}</td>
             <td>${user.face_data_path ? '✅' : '❌'}</td>
-            <td>${user.fingerprint_path ? '✅' : '❌'}</td>
+            <td>${user.fingerprint_id ? '✅' : '❌'}</td>
             <td>
               <button onclick="window.location.href='modifier-utilisateur.html?id=${user.id}'">✏️</button>
               <button onclick="supprimerUtilisateur('${user.id}')">🗑️</button>
