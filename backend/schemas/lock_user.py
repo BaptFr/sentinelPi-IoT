@@ -7,7 +7,7 @@ class UserCreate(BaseModel):
     lastname: str
     firstname: str
     fingerprint_id: Optional[str] = None  #TEMP !!
-    face_data_path: Optional[str] = None  #TEMP !!
+    face_data_id: Optional[str] = None  #TEMP !!
     role: UserRole = UserRole.user
 
 class EnrollmentConfirm(BaseModel):

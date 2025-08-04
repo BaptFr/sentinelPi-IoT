@@ -26,35 +26,36 @@ def read_users(
     return users
 
 #POST Add user
-@router.post("/", response_model=UserOut)
-async def create_user(
-    firstname: str = Form(...),
-    lastname: str = Form(...),
-    role: str = Form(...),
-    face_data: UploadFile = File(...),
+#PAS D'AJOUT DIRECT - BESOIN FINGERPRINT
+# @router.post("/", response_model=UserOut)
+# async def create_user(
+#     firstname: str = Form(...),
+#     lastname: str = Form(...),
+#     role: str = Form(...),
+#     face_data: UploadFile = File(...),
   
-    db: Session = Depends(get_db),
-    current_admin: Admin = Depends(get_current_admin)
-):
-    #Name generation for files
-    face_filename = f"faces/{uuid.uuid4()}.{face_data.filename.split('.')[-1]}"
+#     db: Session = Depends(get_db),
+#     current_admin: Admin = Depends(get_current_admin)
+# ):
+#     #Name generation for files
+#     face_filename = f"faces/{uuid.uuid4()}.{face_data.filename.split('.')[-1]}"
 
-    #File local saving
-    with open(f"uploads/{face_filename}", "wb") as fp:
-        shutil.copyfileobj(face_data.file, fp)
+#     #File local saving
+#     with open(f"uploads/{face_filename}", "wb") as fp:
+#         shutil.copyfileobj(face_data.file, fp)
 
-    db_user = User(
-        lastname=lastname,
-        firstname=firstname,
-        role=role,
-        face_data_path=f"/uploads/{face_filename}"
-    )
+#     db_user = User(
+#         lastname=lastname,
+#         firstname=firstname,
+#         role=role,
+#         face_data_path=f"/uploads/{face_filename}"
+#     )
 
 
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
+#     db.add(db_user)
+#     db.commit()
+#     db.refresh(db_user)
+#     return db_user
 
 #GET ONE user by id
 @router.get("/{user_id}", response_model=UserOut)

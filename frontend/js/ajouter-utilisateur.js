@@ -6,6 +6,9 @@ window.addEventListener("configLoaded", () => {
   const addUserSubmitBtn = document.getElementById("addUserSubmitBtn");
   const enrollmentSubmitBtn = document.getElementById("enrollmentSubmitBtn");
   const status = document.getElementById("enrollment-status");
+  const cancelEnrollmentBtn = document.getElementById("cancelEnrollmentBtn");
+
+  let currentEnrollmentId = null;
 
   //Check functions for Submit button clickable
   function checkInputs() {
@@ -86,8 +89,11 @@ window.addEventListener("configLoaded", () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log(result);       
-        //User create with infos      TODO***********************************************
+        console.log(result);
+        //User create with infos 
+        //      TODO***********************************************
+        currentEnrollmentId = result.enrollment_id;
+        cancelEnrollmentBtn.classList.remove("hidden");
       } else {
         const result = await response.json();
         status.classList.add("hidden");
@@ -105,6 +111,42 @@ window.addEventListener("configLoaded", () => {
     }
   });
 
+  //Cancel enrollment option
+  cancelEnrollmentBtn.addEventListener("click", async () => {
+    if (!currentEnrollmentId) return;
+
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("Session expirée. Veuillez vous reconnecter.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL + "/enrollment/cancel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ enrollment_id: currentEnrollmentId })
+      });
+
+      if (response.ok) {
+        alert("Enrôlement annulé.");
+        status.classList.add("hidden");
+        cancelEnrollmentBtn.classList.add("hidden");
+        enrollmentSubmitBtn.disabled = false;
+        currentEnrollmentId = null;
+      } else {
+        const result = await response.json();
+        alert(result.detail || "Erreur lors de l'annulation.");
+      }
+    } catch (error) {
+      console.error("Cancel enrollment:", error);
+      alert("Erreur réseau lors de l'annulation.");
+    }
+  });
 
 
     /****** A DEFINIR ??  ******/       

@@ -4,15 +4,14 @@ from backend.models.lock_users import User
 def create_user_in_db(
         db: Session,
         user_info: dict,
-        fingerprint_path=None,
-        face_data_path=None
+        fingerprint_id=None,
+        face_data_id=None
 ):
     db_user = User(
         lastname=user_info['lastname'],
-        firtname=user_info['firstname'],
+        firstname=user_info['firstname'],
         role=user_info['role'],
-        fingerprint_path=fingerprint_path,
-        face_data_path=face_data_path
+        fingerprint_id=fingerprint_id,
     )
 
     db.add(db_user)

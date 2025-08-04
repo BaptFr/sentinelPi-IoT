@@ -7,35 +7,50 @@ from backend.models.lock_users import User
 from backend.schemas.lock_user import UserCreate, EnrollmentConfirm
 from backend.security.oauth2 import get_current_admin
 from backend.services.lock_users_service import create_user_in_db
+from backend.core.config import settings
 import uuid, requests
 
 router = APIRouter(prefix="/enrollment", tags=["enrollment"])
 
+#Variable
+RASPBERRY_URL = settings.RASPBERRY_URL
 
 #Temporary memory storage for enrolments(waiting for fingerprints confirmaiton)
 temporary_enrollments: Dict[str, Any] = {}
+temporary_enrollments["enrollementtestid"] = {
+    'lastname': "Doe",
+    'firstname': "John",
+    'role': "user",
+    'status': 'pending'
+}
+
 
 def generate_temporate_id():
     return str(uuid.uuid4())
 
 def send_to_raspberry(enrollment_id):
-    url = "http://respberry/start_enrollment" #test
-    data = {'enrollmentId': enrollment_id}
-    response = requests.post(url, json=data)
+    url = RASPBERRY_URL
+    data = {'enrollment_id': enrollment_id}
+    try:
+        response = requests.post(url, json=data, timeout= 30)
 
-    if response.status_code == 200:
-        print("Enrollment sent to the raspberry")
-    else:
-        print("Error during the sending to the raspberry ")
+        if response.status_code == 200:
+            print("Enrollment sent to the raspberry")
+        else:
+            print("Error during the sending to the raspberry, statuscode: ", response.status_code)
+    except requests.exceptions.RequestException as e :
+        print("Error during the snding to the Raspberry:", e)
+
 
 
 #Starting enrolment route
 @router.post("/start")
 def start_enrollment(
-    user: UserCreate, 
+    user: UserCreate,
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
-):  
+):
+    #Temporry User creation with pending status
     enrollment_id = generate_temporate_id()
     temporary_enrollments[enrollment_id] = {
         'lastname': user.lastname,
@@ -45,20 +60,22 @@ def start_enrollment(
     }
 
     send_to_raspberry(enrollment_id)
-    return{"enrollmentId": enrollment_id}
-
+    return{"enrollment_id": enrollment_id}
 
 #Enrollment confirmation route
 @router.post("/confirm")
 def confirm_enrollment(
-    enrollment_data: EnrollmentConfirm, 
+    enrollment_data: EnrollmentConfirm,
     db: Session = Depends(get_db),
-    current_admin: Admin = Depends(get_current_admin)
+    # current_admin: Admin = Depends(get_current_admin)
 ):
+    print("Available in temporty enrollments:", temporary_enrollments.keys())
+    #Current confirm verification with temporary User created / and adding
     if enrollment_data.enrollment_id in temporary_enrollments:
         user_info = temporary_enrollments.pop(enrollment_data.enrollment_id)
         user_info['fingerprint'] = enrollment_data.fingerprint_id
-        return create_user_in_db(db, user_info, fingerprint_path=user_info['fingerprint'])
+
+        #Real new User creation after confirmation
+        return create_user_in_db(db, user_info, fingerprint_id=user_info['fingerprint'])
     else:
-        raise HTTPException(status_code=400, detail="Invalid enrollment ")
-    
+         raise HTTPException(status_code=400, detail="Invalid enrollment ")
