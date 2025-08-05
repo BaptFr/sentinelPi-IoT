@@ -7,7 +7,6 @@ class UserCreate(BaseModel):
     lastname: str
     firstname: str
     fingerprint_id: Optional[str] = None  #TEMP !!
-    face_data_id: Optional[str] = None  #TEMP !!
     role: UserRole = UserRole.user
 
 class EnrollmentConfirm(BaseModel):
@@ -19,7 +18,6 @@ class UserOut(BaseModel):
     lastname: str
     firstname: str
     fingerprint_id: Optional[str] = None # TEMP !!
-    face_data_path: Optional[str] = None  # TEMP !!
     role: UserRole
 
     model_config = {
@@ -29,5 +27,4 @@ class UserUpdate(BaseModel):
     lastname: Optional[str] = None
     firstname: Optional[str] = None
     fingerprint_id: Optional[str] = None
-    face_data_path: Optional[str] = None
     role: UserRole.user
