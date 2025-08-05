@@ -1,33 +1,163 @@
-//Config api
+//Config API
 window.addEventListener("configLoaded", () => {
-
+  const firstnameCheck = document.getElementById("prenom")
+  const lastnameCheck = document.getElementById("nom")
   const photoInput = document.getElementById("photoInput");
-  const bioInput = document.getElementById("bioInput");
-  const submitBtn = document.getElementById("submitBtn");
+  const addUserSubmitBtn = document.getElementById("addUserSubmitBtn");
+  const enrollmentSubmitBtn = document.getElementById("enrollmentSubmitBtn");
+  const status = document.getElementById("enrollment-status");
+  const cancelEnrollmentBtn = document.getElementById("cancelEnrollmentBtn");
 
-  // Activer le bouton que si les deux fichiers sont sélectionnés
+  let currentEnrollmentId = null;
+
+  //Check functions for Submit button clickable
   function checkInputs() {
-    if (photoInput.files.length > 0 && bioInput.files.length > 0) {
-      submitBtn.disabled = false;
+    if (firstnameCheck.value.trim() !=="" && lastnameCheck.value.trim() !=="") {
+      enrollmentSubmitBtn.disabled = false;
     } else {
-      submitBtn.disabled = true;
+      enrollmentSubmitBtn.disabled = true;
     }
-  }
+  };
 
-  photoInput.addEventListener("change", checkInputs);
-  bioInput.addEventListener("change", checkInputs);
+  function checkPhotoInput () {
+    if (firstnameCheck.value.trim() !=="" && lastnameCheck.value.trim() !=="" & photoInput.files.length > 0 ) {
+      addUserSubmitBtn.disabled = false;
+    } else {
+      addUserSubmitBtn.disabled = true;
+    }
+  };
 
-  //Add user click button
-  submitBtn.addEventListener("click", async () => {
+  //Event listeners
+  photoInput.addEventListener("change", checkPhotoInput);
+  firstnameCheck.addEventListener("input", checkInputs);
+  lastnameCheck.addEventListener("input", checkInputs);
+
+
+  //******Enrollment procedur click button******
+    enrollmentSubmitBtn.addEventListener("click", async () => {
+      const firstname = document.getElementById("prenom").value.trim();
+      const lastname = document.getElementById("nom").value.trim();
+      const role = "user";
+      
+      //Handle errors before submitting
+      if (!firstname || !lastname) {
+        alert("Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
+
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        alert("Session expirée. Veuillez vous reconnecter.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      //Display for waiting process
+      status.classList.remove("hidden");
+      status.classList.add("visible");
+      enrollmentSubmitBtn.disabled = true;
+
+        // ENROLMENT TEMP  ****
+        // setTimeout(() => {
+        //   // message hiden"
+        //   status.classList.add("hidden");
+        //   alert("Procédure terminée !");
+        // }, 3000); 
+
+      //POST to enrollment process
+      try {
+      const response = await fetch(API_URL + "/enrollment/start", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          firstname, 
+          lastname, 
+          role
+        })
+        
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        alert("Session expirée. Veuillez vous reconnecter.");
+        sessionStorage.removeItem("token");
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result);
+        //User create with infos 
+        //      TODO***********************************************
+        currentEnrollmentId = result.enrollment_id;
+        cancelEnrollmentBtn.classList.remove("hidden");
+      } else {
+        const result = await response.json();
+        status.classList.add("hidden");
+        alert(result.detail || result.message || "Erreur lors de la procédure");
+        status.classList.remove("visible");
+        status.classList.add("hidden");
+        location.reload();
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      alert("Une erreur est survenue.");
+      status.classList.remove("visible");
+      status.classList.add("hidden");
+      location.reload();
+    }
+  });
+
+  //Cancel enrollment option
+  cancelEnrollmentBtn.addEventListener("click", async () => {
+    if (!currentEnrollmentId) return;
+
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("Session expirée. Veuillez vous reconnecter.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL + "/enrollment/cancel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ enrollment_id: currentEnrollmentId })
+      });
+
+      if (response.ok) {
+        alert("Enrôlement annulé.");
+        status.classList.add("hidden");
+        cancelEnrollmentBtn.classList.add("hidden");
+        enrollmentSubmitBtn.disabled = false;
+        currentEnrollmentId = null;
+      } else {
+        const result = await response.json();
+        alert(result.detail || "Erreur lors de l'annulation.");
+      }
+    } catch (error) {
+      console.error("Cancel enrollment:", error);
+      alert("Erreur réseau lors de l'annulation.");
+    }
+  });
+
+
+    /****** A DEFINIR ??  ******/       
+  //Add user with face_data click button
+  addUserSubmitBtn.addEventListener("click", async () => {
     const firstname = document.getElementById("prenom").value.trim();
     const lastname = document.getElementById("nom").value.trim();
-    const fingerprint = photoInput.files[0];
-    const face_data = bioInput.files[0];
+    const face_data =  photoInput.files[0];
     const role = "user";
 
-
-
-    if (!firstname || !lastname || !face_data || !fingerprint) {
+    if (!firstname || !lastname) {
       alert("Veuillez remplir tous les champs obligatoires.");
       return;
     }
@@ -43,8 +173,8 @@ window.addEventListener("configLoaded", () => {
     formData.append("firstname", firstname);
     formData.append("lastname", lastname);
     formData.append("role", role);
-    formData.append("fingerprint", fingerprint);
     formData.append("face_data", face_data);
+    
     for (let pair of formData.entries()) {
     console.log(`${pair[0]}:`, pair[1]);
     }
@@ -69,7 +199,7 @@ window.addEventListener("configLoaded", () => {
 
       if (response.ok) {
         document.querySelector("form").reset();
-        submitBtn.disabled = true;
+        addUserSubmitBtn.disabled = true;
         window.location.href = "admin.html";
       } else {
         console.error("Erreur backend :", result); 

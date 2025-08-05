@@ -12,13 +12,13 @@ window.addEventListener("configLoaded", () => {
     const token = sessionStorage.getItem("token");
     if (!token) {
       alert("Session expirée. Veuillez vous reconnecter.");
-      window.location.href = "index.html";
+      window.location.href ="login.html";
     }
   }
 
   function deconnexion() {
     sessionStorage.removeItem("token");
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   }
 
   async function chargerUtilisateurs() {
@@ -51,7 +51,7 @@ window.addEventListener("configLoaded", () => {
             <td>${user.lastname}</td>
             <td>${user.firstname}</td>
             <td>${user.face_data_path ? '✅' : '❌'}</td>
-            <td>${user.fingerprint_path ? '✅' : '❌'}</td>
+            <td>${user.fingerprint_id ? '✅' : '❌'}</td>
             <td>
               <button onclick="window.location.href='modifier-utilisateur.html?id=${user.id}'">✏️</button>
               <button onclick="supprimerUtilisateur('${user.id}')">🗑️</button>

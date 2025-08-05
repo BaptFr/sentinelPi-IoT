@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     ADMIN_EMAIL: str
     ADMIN_PASSWORD: str
     API_URL: str
-
+    RASPBERRY_URL: str
 
     class Config:
         env_file = ".env"

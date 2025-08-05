@@ -62,7 +62,7 @@ function initPage() {
       window.location.href = "admin.html";
     });
 
-  document.getElementById("modifierForm").addEventListener("submit", async function (e) {
+  document.getElementById("modifierUserForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const lastname = document.getElementById("lastname").value.trim();
@@ -95,7 +95,7 @@ function initPage() {
       });
 
       if (response.ok) {
-        document.getElementById("modifierForm").reset();
+        document.getElementById("modifierUserForm").reset();
         window.location.href = "admin.html";
       } else {
         const result = await response.json();
@@ -110,7 +110,8 @@ function initPage() {
 
   const btn = document.querySelector(".return-btn");
   if (btn) {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
+       e.preventDefault();
       window.location.href = "admin.html";
     });
   }
