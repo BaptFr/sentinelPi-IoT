@@ -90,8 +90,6 @@ window.addEventListener("configLoaded", () => {
       if (response.ok) {
         const result = await response.json();
         console.log(result);
-        //User create with infos 
-        //      TODO***********************************************
         currentEnrollmentId = result.enrollment_id;
         cancelEnrollmentBtn.classList.remove("hidden");
       } else {
