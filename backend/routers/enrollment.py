@@ -17,19 +17,20 @@ RASPBERRY_URL = settings.RASPBERRY_URL
 
 #Temporary memory storage for enrolments(waiting for fingerprints confirmaiton)
 temporary_enrollments: Dict[str, Any] = {}
-temporary_enrollments["enrollementtestid"] = {
-    'lastname': "Doe",
-    'firstname': "John",
-    'role': "user",
-    'status': 'pending'
-}
 
+#Pour TEST POSTMAN simulation retour du Raspberry Route: /confirm 
+# temporary_enrollments["test"] = {
+#     'lastname': "Doe",
+#     'firstname': "John",
+#      'role': "user",
+#     'status': 'pending'
+#  }
 
 def generate_temporate_id():
     return str(uuid.uuid4())
 
 def send_to_raspberry(enrollment_id):
-    url = RASPBERRY_URL
+    url = RASPBERRY_URL + "/start_enrollment"
     data = {'enrollment_id': enrollment_id}
     try:
         response = requests.post(url, json=data, timeout= 30)
@@ -67,7 +68,7 @@ def start_enrollment(
 def confirm_enrollment(
     enrollment_data: EnrollmentConfirm,
     db: Session = Depends(get_db),
-    # current_admin: Admin = Depends(get_current_admin)
+    # current_admin: Admin = Depends(get_current_admin) ### Not internal resquest
 ):
     print("Available in temporty enrollments:", temporary_enrollments.keys())
     #Current confirm verification with temporary User created / and adding
@@ -75,7 +76,7 @@ def confirm_enrollment(
         user_info = temporary_enrollments.pop(enrollment_data.enrollment_id)
         user_info['fingerprint'] = enrollment_data.fingerprint_id
 
-        #Real new User creation after confirmation
+        #Confirmed new User creation after confirmation
         return create_user_in_db(db, user_info, fingerprint_id=user_info['fingerprint'])
     else:
          raise HTTPException(status_code=400, detail="Invalid enrollment ")
