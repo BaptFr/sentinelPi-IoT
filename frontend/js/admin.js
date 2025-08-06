@@ -50,7 +50,6 @@ window.addEventListener("configLoaded", () => {
           tr.innerHTML = `
             <td>${user.lastname}</td>
             <td>${user.firstname}</td>
-            <td>${user.face_data_path ? '✅' : '❌'}</td>
             <td>${user.fingerprint_id ? '✅' : '❌'}</td>
             <td>
               <button onclick="window.location.href='modifier-utilisateur.html?id=${user.id}'">✏️</button>
@@ -169,6 +168,8 @@ function supprimerUtilisateur(id) {
       },
     })
       .then((res) => {
+        console.log("Status code:", res.status); //debug
+
         if (!res.ok) throw new Error("Error during supression ");
         alert("Utilisateur supprimé.");
         location.reload(); //Update realoading

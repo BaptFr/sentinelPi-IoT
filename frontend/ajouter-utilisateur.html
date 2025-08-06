@@ -12,22 +12,23 @@
   <div class="add-user-container">
     <h2>👤 Ajouter un utilisateur</h2>
     <form>
-      <label>Prénom</label>
-      <input type="text" id="prenom" required>
-
       <label>Nom</label>
       <input type="text" id="nom" required>
 
-      <label>📸 Photo</label>
-      <input type="file" id="photoInput" accept="image/*">
+      <label>Prénom</label>
+      <input type="text" id="prenom" required>
 
       <label>🧬 Empreinte</label>
       <button type="button" id="enrollmentSubmitBtn" disabled>☝️ Débuter la procédure d'enregistrement d'empreinte digitale</button>
      
       <div id="enrollment-status" class="hidden">
         <p>Procédure de prises d'empreinte en cours... </p>
-        <div class="spinner"></div>
-        <button id="cancelEnrollmentBtn" class="hidden"> Annuler la procédure</button>
+       
+        <p class="hidden"> Veuillez poser le doigt sur le capteur 2 secondes ...</br>
+         Retirez le  ...</br>
+         Reposez le même doigt 2 secondes sur le capteur ...</p>
+          <div class="spinner"></div>
+        <button id="cancelEnrollmentBtn" class="hidden"> Annuler la procédure en cours ?</button>
       </div>
 
       <button type="button" id="addUserSubmitBtn" disabled>(✅ Ajouter)</button>
