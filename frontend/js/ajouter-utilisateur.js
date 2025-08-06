@@ -28,7 +28,6 @@ window.addEventListener("configLoaded", () => {
   };
 
   //Event listeners
-  photoInput.addEventListener("change", checkPhotoInput);
   firstnameCheck.addEventListener("input", checkInputs);
   lastnameCheck.addEventListener("input", checkInputs);
 
@@ -64,7 +63,9 @@ window.addEventListener("configLoaded", () => {
         //   alert("Procédure terminée !");
         // }, 3000); 
 
+
       //POST to enrollment process
+      cancelEnrollmentBtn.classList.remove("hidden");
       try {
       const response = await fetch(API_URL + "/enrollment/start", {
         method: "POST",
@@ -91,7 +92,6 @@ window.addEventListener("configLoaded", () => {
         const result = await response.json();
         console.log(result);
         currentEnrollmentId = result.enrollment_id;
-        cancelEnrollmentBtn.classList.remove("hidden");
       } else {
         const result = await response.json();
         status.classList.add("hidden");
@@ -118,96 +118,77 @@ window.addEventListener("configLoaded", () => {
       alert("Session expirée. Veuillez vous reconnecter.");
       window.location.href = "login.html";
       return;
-    }
-
-    try {
-      const response = await fetch(API_URL + "/enrollment/cancel", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ enrollment_id: currentEnrollmentId })
-      });
-
-      if (response.ok) {
-        alert("Enrôlement annulé.");
-        status.classList.add("hidden");
-        cancelEnrollmentBtn.classList.add("hidden");
-        enrollmentSubmitBtn.disabled = false;
-        currentEnrollmentId = null;
-      } else {
-        const result = await response.json();
-        alert(result.detail || "Erreur lors de l'annulation.");
-      }
-    } catch (error) {
-      console.error("Cancel enrollment:", error);
-      alert("Erreur réseau lors de l'annulation.");
-    }
+    } else{
+      alert("Enrôlement annulé.");
+      status.classList.add("hidden");
+      cancelEnrollmentBtn.classList.add("hidden");
+      enrollmentSubmitBtn.disabled = false;
+      currentEnrollmentId = null;
+    } 
   });
 
 
     /****** A DEFINIR ??  ******/       
   //Add user with face_data click button
-  addUserSubmitBtn.addEventListener("click", async () => {
-    const firstname = document.getElementById("prenom").value.trim();
-    const lastname = document.getElementById("nom").value.trim();
-    const face_data =  photoInput.files[0];
-    const role = "user";
+  // addUserSubmitBtn.addEventListener("click", async () => {
+  //   const firstname = document.getElementById("prenom").value.trim();
+  //   const lastname = document.getElementById("nom").value.trim();
+  //   const face_data =  photoInput.files[0];
+  //   const role = "user";
 
-    if (!firstname || !lastname) {
-      alert("Veuillez remplir tous les champs obligatoires.");
-      return;
-    }
+  //   if (!firstname || !lastname) {
+  //     alert("Veuillez remplir tous les champs obligatoires.");
+  //     return;
+  //   }
 
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      alert("Session expirée. Veuillez vous reconnecter.");
-      window.location.href = "login.html";
-      return;
-    }
+  //   const token = sessionStorage.getItem("token");
+  //   if (!token) {
+  //     alert("Session expirée. Veuillez vous reconnecter.");
+  //     window.location.href = "login.html";
+  //     return;
+  //   }
 
-    const formData = new FormData();
-    formData.append("firstname", firstname);
-    formData.append("lastname", lastname);
-    formData.append("role", role);
-    formData.append("face_data", face_data);
+  //   const formData = new FormData();
+  //   formData.append("firstname", firstname);
+  //   formData.append("lastname", lastname);
+  //   formData.append("role", role);
+  //   formData.append("face_data", face_data);
     
-    for (let pair of formData.entries()) {
-    console.log(`${pair[0]}:`, pair[1]);
-    }
-    //Add user-lock
-    try {
-      const response = await fetch(API_URL + "/lock-users", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        body: formData
-      });
+  //   for (let pair of formData.entries()) {
+  //   console.log(`${pair[0]}:`, pair[1]);
+  //   }
+  //   //Add user-lock
+  //   try {
+  //     const response = await fetch(API_URL + "/lock-users", {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`
+  //       },
+  //       body: formData
+  //     });
 
-      if (response.status === 401 || response.status === 403) {
-        alert("Session expirée. Veuillez vous reconnecter.");
-        sessionStorage.removeItem("token");
-        window.location.href = "login.html";
-        return;
-      }
+  //     if (response.status === 401 || response.status === 403) {
+  //       alert("Session expirée. Veuillez vous reconnecter.");
+  //       sessionStorage.removeItem("token");
+  //       window.location.href = "login.html";
+  //       return;
+  //     }
 
-      const result = await response.json();
+  //     const result = await response.json();
 
-      if (response.ok) {
-        document.querySelector("form").reset();
-        addUserSubmitBtn.disabled = true;
-        window.location.href = "admin.html";
-      } else {
-        console.error("Erreur backend :", result); 
-        alert(result.detail || result.message || "Erreur lors de l'ajout.");
-      }
-    } catch (error) {
-      console.error("Erreur API :", error);
-      alert("Une erreur est survenue.");
-    }
-  });
+  //     if (response.ok) {
+  //       document.querySelector("form").reset();
+  //       addUserSubmitBtn.disabled = true;
+  //       window.location.href = "admin.html";
+  //     } else {
+  //       console.error("Erreur backend :", result); 
+  //       alert(result.detail || result.message || "Erreur lors de l'ajout.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Erreur API :", error);
+  //     alert("Une erreur est survenue.");
+  //   }
+  // });
   
   const btn = document.querySelector(".return-btn");
   if (btn) {

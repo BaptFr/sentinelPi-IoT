@@ -10,7 +10,7 @@ def create_user_in_db(
         db: Session,
         user_info: dict,
         fingerprint_id=None,
-        face_data_id=None
+        enrollment_id=None
 ):
     db_user = User(
         lastname=user_info['lastname'],
@@ -41,7 +41,9 @@ def delete_user_with_fingerprint(db, user_id: str):
                 raise HTTPException(status_code=500, detail=f"Erreur suppression empreinte Raspberry: {resp.text}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Erreur appel Raspberry: {e}")
-
+    deleted_user = user
     db.delete(user)
     db.commit()
+    return deleted_user
+
     

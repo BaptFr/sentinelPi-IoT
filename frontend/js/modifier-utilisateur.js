@@ -47,12 +47,8 @@ function initPage() {
     .then((user) => {
       document.getElementById("lastname").value = user.lastname;
       document.getElementById("firstname").value = user.firstname;
-      const photoStatus = document.getElementById("photoStatus");
       const empreinteStatus = document.getElementById("empreinteStatus");
 
-      if (photoStatus) {
-        photoStatus.textContent = user.face_data_path ? "✔️ Présente" : "❌ Absente";
-      }
       if (empreinteStatus) {
         empreinteStatus.textContent = user.fingerprint_path ? "✔️ Présente" : "❌ Absente";
       }
@@ -62,30 +58,28 @@ function initPage() {
       window.location.href = "admin.html";
     });
 
+  //Using form data not JSON  for  possible evolution of the application (picture, file...)
   document.getElementById("modifierUserForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const lastname = document.getElementById("lastname").value.trim();
     const firstname = document.getElementById("firstname").value.trim();
-    const face_data = document.getElementById("face_data").files[0];
-    const fingerprint = document.getElementById("fingerprint").files[0];
 
-  
     const formData = new FormData();
     formData.append("lastname", lastname);
     formData.append("firstname", firstname);
     formData.append("role", "user");
 
-    if (face_data) {
-      formData.append("face_data", face_data);
-    }
+    // if (face_data) {
+    //   formData.append("face_data", face_data);
+    // }
 
-    if (fingerprint) {
-      formData.append("fingerprint", fingerprint);
-    }
+    // if (fingerprint) {
+    //   formData.append("fingerprint", fingerprint);
+    // }
 
     try {
-      
+    
       const response = await fetch(`${API_URL}/lock-users/${userId}`, {
         method: "PUT",
         headers: {

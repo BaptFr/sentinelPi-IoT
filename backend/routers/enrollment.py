@@ -75,8 +75,19 @@ def confirm_enrollment(
     if enrollment_data.enrollment_id in temporary_enrollments:
         user_info = temporary_enrollments.pop(enrollment_data.enrollment_id)
         user_info['fingerprint'] = enrollment_data.fingerprint_id
+        user_info['enrollment_id'] = enrollment_data.enrollment_id
 
         #Confirmed new User creation after confirmation
-        return create_user_in_db(db, user_info, fingerprint_id=user_info['fingerprint'])
+        return create_user_in_db(db, user_info, fingerprint_id=user_info['fingerprint'], enrollment_id=user_info['enrollment_id'])
     else:
          raise HTTPException(status_code=400, detail="Invalid enrollment ")
+
+#Check status enrollment process
+@router.get("/enrollment/status")
+def enrollment_status(enrollment_id: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.enrollment_id == enrollment_id).first()
+    if user:
+        return {"status": "completed"}
+    else:
+        return {"status": "pending"}
+    

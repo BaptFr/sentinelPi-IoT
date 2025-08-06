@@ -11,4 +11,5 @@ class User(Base):
     lastname = Column(String, index=True, nullable=False)
     firstname = Column(String, nullable=False)
     fingerprint_id = Column(String, nullable=True) #temp !!
+    enrollment_id = Column(String, nullable=True) #tmp nullable !!
     role = Column(SQLAlchemyEnum(UserRole), nullable=False, default=UserRole.user)

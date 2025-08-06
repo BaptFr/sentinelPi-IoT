@@ -168,6 +168,8 @@ function supprimerUtilisateur(id) {
       },
     })
       .then((res) => {
+        console.log("Status code:", res.status); //debug
+
         if (!res.ok) throw new Error("Error during supression ");
         alert("Utilisateur supprimé.");
         location.reload(); //Update realoading
