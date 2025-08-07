@@ -50,7 +50,7 @@ window.addEventListener("configLoaded", () => {
           tr.innerHTML = `
             <td>${user.lastname}</td>
             <td>${user.firstname}</td>
-            <td>${user.fingerprint_id ? '✅' : '❌'}</td>
+            <td>${user.fingerprint_id ? '✅ Accès Serrure 1' : '❌'}</td>
             <td>
               <button onclick="window.location.href='modifier-utilisateur.html?id=${user.id}'">✏️</button>
               <button onclick="supprimerUtilisateur('${user.id}')">🗑️</button>
