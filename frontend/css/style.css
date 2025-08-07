@@ -12,6 +12,10 @@ h1, h2 {
   padding: 10px 0;
 }
 
+h1{
+  text-align: center;
+}
+
 h2 {
   margin-top: 50px;
 }
@@ -32,12 +36,18 @@ table {
   margin: 20px 10px;
   background-color: white;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  border-radius: 10px;
 }
 
 th, td {
-  padding: 12px;
+  padding: 9px;
   border: 1px solid #ccc;
   text-align: center;
+}
+
+th{
+  background-color: #0066cc;
+  color: #ffffff;
 }
 
 thead {
@@ -45,7 +55,21 @@ thead {
   color: white;
 }
 
-/* Pics*/
+/* Dashboard */ 
+
+.admin-header{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#access-name{ 
+  border: 1.5px solid #0000009e;
+  padding: 10px;
+  font-size: 13px;
+  background-color: #ffffff;
+}
+cs*/
 /* .picture {
   width: 60px;
   height: 60px;

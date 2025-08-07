@@ -8,18 +8,34 @@
 <body>
   <div class="admin-container">
     <div class="admin-header">
-      <h1>Bonjour 👋</h1>   
-      <button onclick="window.location.href='ajouter-utilisateur.html'">➕ Ajouter un utilisateur</button>
-      <button onclick="window.location.href='modifier-administrateur.html'">✏️ Modifier Admin</button>
-      <button onclick="deconnexion()">🚪 Déconnexion</button>
+      <h1>Tableau de bord Sentinel Pi</h1>
+      <div>
+        <button onclick="window.location.href='modifier-administrateur.html'">✏️ Modifier Admin</button>
+        <button onclick="deconnexion()">🚪 Déconnexion</button>
+      </div>
     </div>
-    <h2>Utilisateurs</h2>
+    <h2>Serrures</h2>
+    <table>
+      <tr>
+        <th> N° de serrure</th>
+        <th> Accès </th>
+        <th> Action </th>
+      </tr>
+      <tr>
+        <td>#1</td>
+        <td><div id="access-name" contenteditable="true"> Salle n°20</div></td>
+        <td>
+          <button onclick="window.location.href='ajouter-utilisateur.html'">➕ Ajouter un utilisateur</button>
+        </td>
+      </tr>
+    </table>
+    <h2>Utilisateurs et accès</h2>
     <table>
       <thead>
         <tr>
           <th>Nom</th>
           <th>Prénom</th>
-          <th>Empreinte</th>
+          <th>Accès empreinte</th>
           <th>Actions</th>
         </tr>
       </thead>
