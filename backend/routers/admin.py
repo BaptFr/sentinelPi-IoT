@@ -11,7 +11,7 @@ from backend.security.token import create_access_token
 from backend.security.oauth2 import get_current_admin
 from backend.core.config import settings
 
-router = APIRouter(prefix="/admin", tags=["admin"])
+router = APIRouter(prefix="/api/admin", tags=["admin"])
 
 #Admin by default creation
 @router.post("/", response_model=AdminOut)

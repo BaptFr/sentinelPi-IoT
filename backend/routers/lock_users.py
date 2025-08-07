@@ -15,7 +15,7 @@ from backend.schemas.lock_user import UserOut
 from backend.services.lock_users_service import delete_user_with_fingerprint
 
 
-router = APIRouter(prefix="/lock-users", tags=["lock-users"])
+router = APIRouter(prefix="/api/lock-users", tags=["lock-users"])
 
 #GET all users
 @router.get("/", response_model=List[UserOut])

@@ -56,18 +56,10 @@ window.addEventListener("configLoaded", () => {
       status.classList.add("visible");
       enrollmentSubmitBtn.disabled = true;
 
-        // ENROLMENT TEMP  ****
-        // setTimeout(() => {
-        //   // message hiden"
-        //   status.classList.add("hidden");
-        //   alert("Procédure terminée !");
-        // }, 3000); 
-
-
       //POST to enrollment process
       cancelEnrollmentBtn.classList.remove("hidden");
       try {
-      const response = await fetch(API_URL + "/enrollment/start", {
+      const response = await fetch(API_URL + "/api/enrollment/start", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +120,7 @@ window.addEventListener("configLoaded", () => {
   });
 
 
-    /****** A DEFINIR ??  ******/       
+    /****** PROJECT POSSILE EVOLUTION  ******/       
   //Add user with face_data click button
   // addUserSubmitBtn.addEventListener("click", async () => {
   //   const firstname = document.getElementById("prenom").value.trim();

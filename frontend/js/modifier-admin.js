@@ -28,7 +28,7 @@ function initPage() {
 
 
   //Previous infos recuperation for form 
-  fetch(`${API_URL}/admin/profile`, {
+  fetch(`${API_URL}/api/admin/profile`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -77,7 +77,7 @@ function initPage() {
 
     try {
       
-      const response = await fetch( API_URL + "/admin/profile", {
+      const response = await fetch( API_URL + "/api/admin/profile", {
         method: "PUT",
         headers: {
           "Authorization": `Bearer ${token}`,

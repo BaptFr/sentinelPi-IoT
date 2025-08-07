@@ -1,3 +1,4 @@
+ 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any
@@ -10,7 +11,7 @@ from backend.services.lock_users_service import create_user_in_db
 from backend.core.config import settings
 import uuid, requests
 
-router = APIRouter(prefix="/enrollment", tags=["enrollment"])
+router = APIRouter(prefix="/api/enrollment", tags=["enrollment"])
 
 #Variable
 RASPBERRY_URL = settings.RASPBERRY_URL
@@ -83,7 +84,7 @@ def confirm_enrollment(
          raise HTTPException(status_code=400, detail="Invalid enrollment ")
 
 #Check status enrollment process
-@router.get("/enrollment/status")
+@router.get("/status")
 def enrollment_status(enrollment_id: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.enrollment_id == enrollment_id).first()
     if user:

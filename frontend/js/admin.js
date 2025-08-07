@@ -26,7 +26,7 @@ window.addEventListener("configLoaded", () => {
 
   //lock-users list
     try {
-      const response = await fetch(API_URL + "/lock-users", {
+      const response = await fetch(API_URL + "/api/lock-users", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -77,7 +77,7 @@ window.addEventListener("configLoaded", () => {
     formData.append(type, fichier);
 
     try {
-      const response = await fetch(API_URL+ "/${id}/${type}", {
+      const response = await fetch(API_URL+ "api/${id}/${type}", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`
@@ -161,7 +161,7 @@ window.addEventListener("configLoaded", () => {
 
 function supprimerUtilisateur(id) {
   if (confirm("ÊTES VOUS SÛR DE VOULOIR SUPPRIMER CET UTILISATEUR ?")) {
-    fetch(`${API_URL}/lock-users/${id}`, {
+    fetch(`${API_URL}/api/lock-users/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
