@@ -7,7 +7,6 @@ window.addEventListener("configLoaded", () => {
     chargerUtilisateurs();
     chargerHistorique();
 
-
   function verifierConnexion() {
     const token = sessionStorage.getItem("token");
     if (!token) {
@@ -26,7 +25,7 @@ window.addEventListener("configLoaded", () => {
 
   //lock-users list
     try {
-      const response = await fetch(API_URL + "/lock-users", {
+      const response = await fetch(API_URL + "/api/lock-users", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -77,7 +76,7 @@ window.addEventListener("configLoaded", () => {
     formData.append(type, fichier);
 
     try {
-      const response = await fetch(API_URL+ "/${id}/${type}", {
+      const response = await fetch(API_URL+ "api/${id}/${type}", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`
@@ -100,7 +99,8 @@ window.addEventListener("configLoaded", () => {
     const token = sessionStorage.getItem("token");
 
     try {
-      const response = await fetch("https://URL_API/historique", {
+      const response = await fetch(API_URL + "/api/logs/access", {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -120,9 +120,9 @@ window.addEventListener("configLoaded", () => {
         tr.innerHTML = `
           <td>${item.lastname}</td>
           <td>${item.firstname}</td>
-          <td>${item.date}</td>
-          <td>${item.heure}</td>
-          <td>${item.result}</td>
+          <td>${item.access_time}</td>
+          <td>${item.status}</td>
+          <td>${item.device_id}</td>
         `;
         historyList.appendChild(tr);
       });
@@ -161,7 +161,7 @@ window.addEventListener("configLoaded", () => {
 
 function supprimerUtilisateur(id) {
   if (confirm("ÊTES VOUS SÛR DE VOULOIR SUPPRIMER CET UTILISATEUR ?")) {
-    fetch(`${API_URL}/lock-users/${id}`, {
+    fetch(`${API_URL}/api/lock-users/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,

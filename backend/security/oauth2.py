@@ -6,7 +6,7 @@ from backend.models.admins import Admin
 from backend.core.config import settings
 from backend.security.token import verify_token
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="admin/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/admin/login")
 
 def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> Admin:
     credentials_exception = HTTPException(
