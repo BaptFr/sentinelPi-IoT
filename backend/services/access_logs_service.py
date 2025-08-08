@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_, desc
 from datetime import datetime, timezone
 import uuid
+import pytz
 
 from backend.models.access_logs import AccessLog
 from backend.schemas.access_log import AccessLogCreate
@@ -13,13 +14,16 @@ def create_access_log(
         db: Session,
         log_data: AccessLogCreate, 
     )-> dict:
-
     generated_id = str(uuid.uuid4())
-    generated_time = datetime.now(timezone.utc).isoformat()
+    #Date/Hour France
+    paris_tz = pytz.timezone('Europe/Paris')
+    generated_time = datetime.now(paris_tz)
+    formatted_time = generated_time.strftime(' Le %d/%m/%Y à %H:%M:%S')
+
  
     db_log = AccessLog(
         id=generated_id,                    
-        access_time=generated_time,         
+        access_time=formatted_time,         
         status=log_data.status,
         fingerprint_id=log_data.fingerprint_id,
         accuracy_score=log_data.accuracy_score,
