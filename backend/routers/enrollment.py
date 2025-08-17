@@ -9,28 +9,38 @@ from backend.schemas.lock_user import UserCreate, EnrollmentConfirm
 from backend.security.oauth2 import get_current_admin
 from backend.services.lock_users_service import create_user_in_db
 from backend.core.config import settings
-from backend.websocket.manager import manager
+from backend.websocket.manager import manager 
 import uuid, requests, asyncio
 
 router = APIRouter(prefix="/api/enrollment", tags=["enrollment"])
 
 #Variable
 RASPBERRY_URL = settings.RASPBERRY_URL
+DEVICE_ID = settings.DEVICE_ID
 
 #Temporary memory storage for enrolments(waiting for fingerprints confirmaiton)
 temporary_enrollments: Dict[str, Any] = {}
 
-#Pour TEST POSTMAN simulation retour du Raspberry Route: /confirm 
-# temporary_enrollments["test"] = {
-#     'lastname': "Doe",
-#     'firstname': "John",
-#      'role': "user",
-#     'status': 'pending'
-#  }
-
-
 def generate_temporate_id():
     return str(uuid.uuid4())
+
+
+async def send_to_raspberry(enrollment_id):
+    # Payload WebSocket
+    payload = {
+        "action": "start_enrollment",
+        "enrollment_id": enrollment_id,
+        "device_id": DEVICE_ID
+    }
+
+    try:
+        success = await manager.send_enrollment_to_raspberry(payload)
+        if success:
+            print(f"Enrollment {enrollment_id} sent to raspberry via WebSocket")
+        else:
+            print("No Raspberry connected to WebSocket")
+    except Exception as e:
+        print(f"Error during sending to raspberyy: {e}")
 
 #LOCAL NETWORK VERSION
 # def send_to_raspberry(enrollment_id):
@@ -45,17 +55,6 @@ def generate_temporate_id():
 #             print("Error during the sending to the raspberry, statuscode: ", response.status_code)
 #     except requests.exceptions.RequestException as e :
 #         print("Error during the snding to the Raspberry:", e)
-async def send_to_raspberry(enrollment_id):
-    #Websocket
-    success = await manager.send_enrollment_to_raspberry(enrollment_id)
-    if success:
-        print("Enrollment sent to raspberry at WebSocket")
-    else:
-        print("No Raspberry connected to WebSocket ")
-
-
-
-
 
 
 #Starting enrolment route
@@ -67,15 +66,17 @@ async def start_enrollment(
 ):
     #Temporry User creation with pending status
     enrollment_id = generate_temporate_id()
-    temporary_enrollments[enrollment_id] = {
+    user_info = {
         'lastname': user.lastname,
         'firstname': user.firstname,
         'role': user.role,
         'status': 'pending'
     }
 
+    temporary_enrollments[enrollment_id] = user_info
+
     await send_to_raspberry(enrollment_id)
-    return{"enrollment_id": enrollment_id}
+    return{"enrollment_id": enrollment_id, "websocket_connected": settings.DEVICE_ID in manager.active_connections}
 
 #Enrollment confirmation route
 @router.post("/confirm")

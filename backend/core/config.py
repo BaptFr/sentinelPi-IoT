@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     ADMIN_PASSWORD: str
     API_URL: str
     RASPBERRY_URL: str
+    DEVICE_ID:str
 
     class Config:
         env_file = ".env"
