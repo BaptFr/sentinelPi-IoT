@@ -9,7 +9,8 @@ from backend.schemas.lock_user import UserCreate, EnrollmentConfirm
 from backend.security.oauth2 import get_current_admin
 from backend.services.lock_users_service import create_user_in_db
 from backend.core.config import settings
-import uuid, requests
+from backend.websocket.manager import manager
+import uuid, requests, asyncio
 
 router = APIRouter(prefix="/api/enrollment", tags=["enrollment"])
 
@@ -27,27 +28,39 @@ temporary_enrollments: Dict[str, Any] = {}
 #     'status': 'pending'
 #  }
 
+
 def generate_temporate_id():
     return str(uuid.uuid4())
 
-def send_to_raspberry(enrollment_id):
-    url = RASPBERRY_URL + "/start_enrollment"
-    data = {'enrollment_id': enrollment_id}
-    try:
-        response = requests.post(url, json=data, timeout= 30)
+#LOCAL NETWORK VERSION
+# def send_to_raspberry(enrollment_id):
+#     url = RASPBERRY_URL + "/start_enrollment"
+#     data = {'enrollment_id': enrollment_id}
+#     try:
+#         response = requests.post(url, json=data, timeout= 30)
 
-        if response.status_code == 200:
-            print("Enrollment sent to the raspberry")
-        else:
-            print("Error during the sending to the raspberry, statuscode: ", response.status_code)
-    except requests.exceptions.RequestException as e :
-        print("Error during the snding to the Raspberry:", e)
+#         if response.status_code == 200:
+#             print("Enrollment sent to the raspberry")
+#         else:
+#             print("Error during the sending to the raspberry, statuscode: ", response.status_code)
+#     except requests.exceptions.RequestException as e :
+#         print("Error during the snding to the Raspberry:", e)
+async def send_to_raspberry(enrollment_id):
+    #Websocket
+    success = await manager.send_enrollment_to_raspberry(enrollment_id)
+    if success:
+        print("Enrollment sent to raspberry at WebSocket")
+    else:
+        print("No Raspberry connected to WebSocket ")
+
+
+
 
 
 
 #Starting enrolment route
 @router.post("/start")
-def start_enrollment(
+async def start_enrollment(
     user: UserCreate,
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
@@ -61,7 +74,7 @@ def start_enrollment(
         'status': 'pending'
     }
 
-    send_to_raspberry(enrollment_id)
+    await send_to_raspberry(enrollment_id)
     return{"enrollment_id": enrollment_id}
 
 #Enrollment confirmation route

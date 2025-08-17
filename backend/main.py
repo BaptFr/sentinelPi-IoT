@@ -5,6 +5,7 @@ from backend.routers.admin import router as admin_router
 from backend.routers.lock_users import router as lock_users_router
 from backend.routers.enrollment import router as enrollment_router
 from backend.routers.access_logs import router as access_logs_router
+from backend.routers.websocket import router as websocket_router
 from backend.database.database import SessionLocal, engine, Base
 from backend.core.init_admin import init_admin
 
@@ -39,7 +40,7 @@ app.include_router(admin_router)
 app.include_router(lock_users_router)
 app.include_router(enrollment_router)
 app.include_router(access_logs_router)
-
+app.include_router(websocket_router)
 
 #Root
 @app.get("/")
