@@ -13,6 +13,7 @@ class UserCreate(BaseModel):
 class EnrollmentConfirm(BaseModel):
     enrollment_id: str
     fingerprint_id: str
+    device_id: str
 
 class UserOut(BaseModel):
     id: UUID
