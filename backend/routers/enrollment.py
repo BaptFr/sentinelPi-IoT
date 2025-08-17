@@ -76,7 +76,11 @@ async def start_enrollment(
     temporary_enrollments[enrollment_id] = user_info
 
     await send_to_raspberry(enrollment_id)
-    return{"enrollment_id": enrollment_id, "websocket_connected": settings.DEVICE_ID in manager.active_connections}
+    return{
+    "enrollment_id": enrollment_id, 
+    "websocket_connected": manager.is_device_connected(settings.DEVICE_ID)
+    }
+
 
 #Enrollment confirmation route
 @router.post("/confirm")
@@ -93,7 +97,11 @@ def confirm_enrollment(
         user_info['enrollment_id'] = enrollment_data.enrollment_id
 
         #Confirmed new User creation after confirmation
-        return create_user_in_db(db, user_info, fingerprint_id=user_info['fingerprint'], enrollment_id=user_info['enrollment_id'])
+        return create_user_in_db(
+            db, user_info, 
+            fingerprint_id=user_info['fingerprint'], 
+            enrollment_id=user_info['enrollment_id']
+        )
     else:
          raise HTTPException(status_code=400, detail="Invalid enrollment ")
 
