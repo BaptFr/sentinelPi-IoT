@@ -64,9 +64,9 @@ def update_user(
 
 #DELETE ONE user
 @router.delete("/{user_id}", response_model=UserOut)
-def delete_user(
+async def delete_user(
     user_id: str,
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(get_current_admin)
 ):
-    return delete_user_with_fingerprint(db, user_id)
+    return await delete_user_with_fingerprint(db, user_id)
