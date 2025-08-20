@@ -15,7 +15,8 @@ class ConnectionManager:
     #Connection
     async def connect(self, websocket: WebSocket, device_id: str):
         await websocket.accept()
-        self.active_connections[device_id] = websocket
+        async with self.lock:
+            self.active_connections[device_id] = websocket
         logger.info(f"Device {device_id} connected via WebSocket")
         print(f"{device_id} connected")
         
@@ -34,7 +35,6 @@ class ConnectionManager:
         if device_id in self.active_connections:
             del self.active_connections[device_id]
             logger.info(f"Device {device_id} disconnected")
-            print(f"{device_id} déconnecté")
     
     async def send_message(self, device_id: str, message: str):
         websocket = self.active_connections.get(device_id)
@@ -45,6 +45,7 @@ class ConnectionManager:
             except Exception as e:
                 logger.error(f"Error sending message to {device_id}: {e}")
                 self.disconnect(device_id)
+                self._queue_message(device_id, message)
                 return False
         return False
     

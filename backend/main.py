@@ -1,6 +1,8 @@
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+
+import asyncio
 from backend.routers.admin import router as admin_router
 from backend.routers.lock_users import router as lock_users_router
 from backend.routers.enrollment import router as enrollment_router
@@ -46,4 +48,8 @@ app.include_router(websocket_router)
 @app.get("/")
 def read_root():
     return {"message": "Backend is running "}
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(monitor_connections())
 
