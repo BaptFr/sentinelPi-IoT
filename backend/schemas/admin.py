@@ -13,6 +13,7 @@ class AdminCreate(BaseModel):
 class AdminLogin(BaseModel):
     email: EmailStr = Field(..., min_length=6, max_length=100) 
     password: str = Field(..., min_length=6, max_length=100) 
+    
 class AdminUpdate(BaseModel):
     firstname: Optional[str] = Field(None, min_length=1, max_length=50)    
     lastname: Optional[str] = Field(None, min_length=1, max_length=50)

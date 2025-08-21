@@ -1,16 +1,8 @@
 //Config Api:
-document.addEventListener("DOMContentLoaded", () => {
-  fetch("config.json")
-    .then(res => res.json())
-    .then(config => {
-      window.API_URL = config.API_URL;
-      initPage();
-    })
-    .catch(err => {
-      console.error("config.json loading error :", err);
-      alert("Erreur lors du chargement de la configuration. Veuillez réessayer plus tard.");
-    });
+window.addEventListener("configLoaded", () => {
+    initPage(); 
 });
+
 function initPage() {
   //ID recuperation
   const urlParams = new URLSearchParams(window.location.search);
@@ -35,7 +27,7 @@ function initPage() {
   }
 
   // User infos recuperation for the form
-  fetch(`${API_URL}/lock-users/${userId}`, {
+  fetch(`${API_URL}/api/lock-users/${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -80,7 +72,7 @@ function initPage() {
 
     try {
     
-      const response = await fetch(`${API_URL}/lock-users/${userId}`, {
+      const response = await fetch(`${API_URL}/api/lock-users/${userId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}` 

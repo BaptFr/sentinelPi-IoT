@@ -5,6 +5,11 @@ from backend.models.lock_users import User
 from backend.core.config import settings
 from backend.websocket.manager import manager
 
+
+DEVICE_ID = settings.DEVICE_ID
+RASPBERRY_URL = settings.RASPBERRY_URL
+
+#Create new user in DB
 def create_user_in_db(
         db: Session,
         user_info: dict,
@@ -23,7 +28,6 @@ def create_user_in_db(
     db.refresh(db_user)
     return db_user
 
-RASPBERRY_URL = settings.RASPBERRY_URL
 
 async def delete_user_with_fingerprint(db: Session, user_id: str):
     user = db.query(User).filter(User.id == user_id).first()
@@ -37,22 +41,33 @@ async def delete_user_with_fingerprint(db: Session, user_id: str):
         db.delete(user)
         db.commit()
         return user
-    #Else deleting fingerprint raspberry  the User in DB
+    #Else deleting fingerprint raspberry then the User in DB
     payload = {
         "action": "delete_fingerprint",
         "fingerprint_id": fingerprint_id,
         "user_id": user_id
     }
     try:
-        #WS manager method
-        success = await manager.send_message_to_device(payload)
+        #WS manager method Message send verification
+        success = await manager.send_message_to_device(message=payload, device_id=DEVICE_ID)
+        
         if not success:
-            raise HTTPException(status_code=500, detail=f"Error deletion fingerprint in Raspberry: {resp.text}")
+            print(f"Erreur WS pour supprimer l'empreinte {fingerprint_id}")
+            raise HTTPException(status_code=500, detail="Failed to delete fingerprint")
+
+        confirmed = await manager.wait_for_device_confirmation(fingerprint_id=fingerprint_id)
+        #Debug condition to before deleting in DB : Raspberry delete confirmation verification
+        if not confirmed:
+            print(f"Fingerprint suppresion failed on Raspberry part")
+            raise HTTPException(status_code=500, detail="Device failed to delete fingerprint") 
+   
     except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error calling Raspberry: {e}")
+            print(f"Exception WS: {e}")
+            raise HTTPException(status_code=500, detail=f"WS error: {e}")
     
     
     deleted_user = user
     db.delete(user)
     db.commit()
+
     return deleted_user
