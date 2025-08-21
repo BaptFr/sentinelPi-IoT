@@ -49,6 +49,7 @@ async def send_to_raspberry(enrollment_id):
 #     try:
 #         response = requests.post(url, json=data, timeout= 30)
 
+
 #         if response.status_code == 200:
 #             print("Enrollment sent to the raspberry")
 #         else:
