@@ -6,6 +6,7 @@ import asyncio
 
 router = APIRouter(prefix="/ws/raspberry", tags=["websocket"])
 
+
 @router.websocket("/{device_id}")
 async def websocket_endpoint(websocket: WebSocket, device_id: str):
     print(f"WS connection requested for {device_id}")
@@ -18,10 +19,14 @@ async def websocket_endpoint(websocket: WebSocket, device_id: str):
         "message": "Successfully connected to backend"
     }))
 
-    try:  
+    try: 
+        missed_heartbeats = 0
+        MAX_MISSED = 5 
+
         while True:
             try:
-                data = await asyncio.wait_for(websocket.receive_text(), timeout=30)
+                data = await websocket.receive_text()
+                missed_heartbeats = 0
                 print(f"Message from Raspberry {device_id}: {data}")
                 
                 try:
@@ -29,9 +34,16 @@ async def websocket_endpoint(websocket: WebSocket, device_id: str):
                     await handle_device_message(device_id, message, websocket)
                 except json.JSONDecodeError:
                     print(f"Invalid JSON from {device_id}: {data}")
+           
             except asyncio.TimeoutError:
+                missed_heartbeats += 1
+                print(f"Timeout waiting for {device_id} (missed {missed_heartbeats}/{MAX_MISSED})")
+                if missed_heartbeats >= MAX_MISSED:
+                    print(f"Device {device_id} seems disconnected, closing connection.")
+                    break 
                 await asyncio.sleep(0.1)
-                continue
+            
+            
             except WebSocketDisconnect:
                 print(f"Device {device_id} disconnected normally")
                 break

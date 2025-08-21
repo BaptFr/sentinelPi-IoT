@@ -11,7 +11,8 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: Dict[str, WebSocket] = {}
         self.pending_messages: Dict[str, List[Dict[str, Any]]] = {}
-    
+        self.lock = asyncio.Lock()
+
     #Connection
     async def connect(self, websocket: WebSocket, device_id: str):
         await websocket.accept()
