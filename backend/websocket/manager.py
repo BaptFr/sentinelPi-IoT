@@ -12,6 +12,8 @@ class ConnectionManager:
         self.active_connections: Dict[str, WebSocket] = {}
         self.pending_messages: Dict[str, List[Dict[str, Any]]] = {}
         self.lock = asyncio.Lock()
+        self.pending_responses: Dict[str, asyncio.Future] = {} 
+
 
     #Connection
     async def connect(self, websocket: WebSocket, device_id: str):
@@ -54,9 +56,15 @@ class ConnectionManager:
         if device_id in self.active_connections:
             try:
                 websocket = self.active_connections[device_id]
+                if message.get("action") == "delete_fingerprint":
+                    fingerprint_id = str(message["fingerprint_id"])
+                    loop = asyncio.get_running_loop()
+                    self.pending_responses[fingerprint_id] = loop.create_future()
+
                 await websocket.send_text(json.dumps(message))
-                logger.info(f"Message sent to device {device_id}: {message.get('type', 'unknown')}")
+                logger.info(f"Message sent to device {device_id}: {message.get('type', message.get('action', 'unknown'))}")
                 return True
+
             except Exception as e:
                 logger.error(f"Error sending message to {device_id}: {e}")
 
@@ -69,7 +77,40 @@ class ConnectionManager:
             self._queue_message(device_id, message)
             logger.warning(f"Device {device_id} not connected, message queued")
             return False
-    
+
+
+    async def handle_device_message(self, device_id: str, message: Dict[str, Any]):
+        action = message.get("action")
+
+        #Futur resolution NOT the confirmation for endpoitn
+        if action == "delete_confirmation":
+            fingerprint_id = str(message.get("fingerprint_id"))
+            success = message.get("success", False)
+            fut = self.pending_responses.pop(fingerprint_id, None)
+
+            if fut and not fut.done():
+                if success:
+                    fut.set_result(True)
+                else:
+                    fut.set_exception(Exception(message.get("message", "Delete failed")))
+
+    #Device conf
+    async def wait_for_device_confirmation(self, fingerprint_id: str, timeout: float = 5.0) -> bool:
+        #handle_device_message resolution futur wiating
+        fut = self.pending_responses.get(fingerprint_id)
+        if not fut:
+            raise Exception(f"No pending confirmation for fingerprint {fingerprint_id}")
+
+        try:
+            result = await asyncio.wait_for(fut, timeout=timeout)
+            return result
+        except asyncio.TimeoutError:
+            # If timeout
+            self.pending_responses.pop(fingerprint_id, None)
+            raise Exception(f"Timeout waiting for device confirmation for fingerprint {fingerprint_id}")
+        except Exception as e:
+            self.pending_responses.pop(fingerprint_id, None)
+            raise e
     #Waiting queue
     def _queue_message(self, device_id: str, message: Dict[str, Any]):
         if device_id not in self.pending_messages:

@@ -1,5 +1,7 @@
-//Config API
-window.addEventListener("configLoaded", () => {
+
+window.addEventListener("configLoaded", initPage);
+
+function initPage() {
   const firstnameCheck = document.getElementById("prenom")
   const lastnameCheck = document.getElementById("nom")
   const photoInput = document.getElementById("photoInput");
@@ -10,55 +12,58 @@ window.addEventListener("configLoaded", () => {
 
   let currentEnrollmentId = null;
 
+
   //Check functions for Submit button clickable
   function checkInputs() {
-    if (firstnameCheck.value.trim() !=="" && lastnameCheck.value.trim() !=="") {
-      enrollmentSubmitBtn.disabled = false;
-    } else {
-      enrollmentSubmitBtn.disabled = true;
-    }
-  };
+    enrollmentSubmitBtn.disabled = firstnameCheck.value.trim() === "" || lastnameCheck.value.trim() === "";
+  }
 
-  function checkPhotoInput () {
-    if (firstnameCheck.value.trim() !=="" && lastnameCheck.value.trim() !=="" & photoInput.files.length > 0 ) {
-      addUserSubmitBtn.disabled = false;
-    } else {
-      addUserSubmitBtn.disabled = true;
-    }
-  };
+  //Upgrade Device Version
+  // function checkPhotoInput () {
+  //   if (firstnameCheck.value.trim() !=="" && lastnameCheck.value.trim() !=="" & photoInput.files.length > 0 ) {
+  //     addUserSubmitBtn.disabled = false;
+  //   } else {
+  //     addUserSubmitBtn.disabled = true;
+  //   }
+  // };
 
   //Event listeners
-  firstnameCheck.addEventListener("input", checkInputs);
-  lastnameCheck.addEventListener("input", checkInputs);
+  function attachListenerOnce(element, event, handler) {
+      element.removeEventListener(event, handler);
+      element.addEventListener(event, handler);
+  }
+  attachListenerOnce(firstnameCheck, "input", checkInputs);
+  attachListenerOnce(lastnameCheck, "input", checkInputs);
+
+  checkInputs();
 
 
   //******Enrollment procedur click button******
-    enrollmentSubmitBtn.addEventListener("click", async () => {
-      const firstname = document.getElementById("prenom").value.trim();
-      const lastname = document.getElementById("nom").value.trim();
-      const role = "user";
-      
-      //Handle errors before submitting
-      if (!firstname || !lastname) {
-        alert("Veuillez remplir tous les champs obligatoires.");
-        return;
-      }
+  enrollmentSubmitBtn.addEventListener("click", async () => {
+    const firstname = document.getElementById("prenom").value.trim();
+    const lastname = document.getElementById("nom").value.trim();
+    const role = "user";
 
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        alert("Session expirée. Veuillez vous reconnecter.");
-        window.location.href = "login.html";
-        return;
-      }
+    //Handle errors before submitting
+    if (!firstname || !lastname) {
+      alert("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
 
-      //Display for waiting process
-      status.classList.remove("hidden");
-      status.classList.add("visible");
-      enrollmentSubmitBtn.disabled = true;
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("Session expirée. Veuillez vous reconnecter.");
+      window.location.href = "login.html";
+      return;
+    }
 
-      //POST to enrollment process
-      cancelEnrollmentBtn.classList.remove("hidden");
-      try {
+    //Display for waiting process
+    status.classList.remove("hidden");
+    status.classList.add("visible");
+    enrollmentSubmitBtn.disabled = true;
+    cancelEnrollmentBtn.classList.remove("hidden");
+
+    try {
       const response = await fetch(API_URL + "/api/enrollment/start", {
         method: "POST",
         headers: {
@@ -66,11 +71,11 @@ window.addEventListener("configLoaded", () => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          firstname, 
-          lastname, 
+          firstname,
+          lastname,
           role
         })
-        
+
       });
 
       if (response.status === 401 || response.status === 403) {
@@ -84,6 +89,10 @@ window.addEventListener("configLoaded", () => {
         const result = await response.json();
         console.log(result);
         currentEnrollmentId = result.enrollment_id;
+        status.classList.remove("visible");
+        status.classList.add("hidden");
+        alert("Utilisateur ajouté avec succès !");
+        window.location.href = "admin.html"; 
       } else {
         const result = await response.json();
         status.classList.add("hidden");
@@ -105,22 +114,15 @@ window.addEventListener("configLoaded", () => {
   cancelEnrollmentBtn.addEventListener("click", async () => {
     if (!currentEnrollmentId) return;
 
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      alert("Session expirée. Veuillez vous reconnecter.");
-      window.location.href = "login.html";
-      return;
-    } else{
-      alert("Enrôlement annulé.");
-      status.classList.add("hidden");
-      cancelEnrollmentBtn.classList.add("hidden");
-      enrollmentSubmitBtn.disabled = false;
-      currentEnrollmentId = null;
-    } 
+    alert("Enrôlement annulé.");
+    status.classList.add("hidden");
+    cancelEnrollmentBtn.classList.add("hidden");
+    enrollmentSubmitBtn.disabled = false;
+    currentEnrollmentId = null;
   });
 
 
-    /****** PROJECT POSSILE EVOLUTION  ******/       
+  /****** PROJECT POSSILE CAM UPGRADE  ******/
   //Add user with face_data click button
   // addUserSubmitBtn.addEventListener("click", async () => {
   //   const firstname = document.getElementById("prenom").value.trim();
@@ -145,7 +147,7 @@ window.addEventListener("configLoaded", () => {
   //   formData.append("lastname", lastname);
   //   formData.append("role", role);
   //   formData.append("face_data", face_data);
-    
+
   //   for (let pair of formData.entries()) {
   //   console.log(`${pair[0]}:`, pair[1]);
   //   }
@@ -181,11 +183,11 @@ window.addEventListener("configLoaded", () => {
   //     alert("Une erreur est survenue.");
   //   }
   // });
-  
+
   const btn = document.querySelector(".return-btn");
   if (btn) {
     btn.addEventListener("click", () => {
       window.location.href = "admin.html";
     });
   }
-})
+}

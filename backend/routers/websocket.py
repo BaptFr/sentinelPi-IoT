@@ -12,25 +12,25 @@ async def websocket_endpoint(websocket: WebSocket, device_id: str):
     print(f"WS connection requested for {device_id}")
 
     await manager.connect(websocket, device_id)
-    
-    await websocket.send_text(json.dumps({
-        "type": "connection_confirmed",
-        "device_id": device_id,
-        "message": "Successfully connected to backend"
-    }))
+    try:
+        await websocket.send_text(json.dumps({
+            "type": "connection_confirmed",
+            "device_id": device_id,
+            "message": "Successfully connected to backend"
+        }))
 
-    try: 
         missed_heartbeats = 0
         MAX_MISSED = 5 
 
         while True:
             try:
-                data = await websocket.receive_text()
+                data = await asyncio.wait_for(websocket.receive_text(), timeout=10)
                 missed_heartbeats = 0
                 print(f"Message from Raspberry {device_id}: {data}")
                 
                 try:
                     message = json.loads(data)
+                    await manager.handle_device_message(device_id, message)
                     await handle_device_message(device_id, message, websocket)
                 except json.JSONDecodeError:
                     print(f"Invalid JSON from {device_id}: {data}")

@@ -49,7 +49,7 @@ window.addEventListener("configLoaded", () => {
           tr.innerHTML = `
             <td>${user.lastname}</td>
             <td>${user.firstname}</td>
-            <td>${user.fingerprint_id ? '✅ Accès Serrure 1' : '❌'}</td>
+            <td>${user.fingerprint_id ? '✅ Accès Serrure1' : '❌'}</td>
             <td>
               <button onclick="window.location.href='modifier-utilisateur.html?id=${user.id}'">✏️</button>
               <button onclick="supprimerUtilisateur('${user.id}')">🗑️</button>
@@ -64,6 +64,7 @@ window.addEventListener("configLoaded", () => {
     }
   }
 
+  //Si ajout MEDIA ou autre 
   async function modifierMediaUtilisateur(id, type, fichier) {
     const token = sessionStorage.getItem("token");
 
@@ -76,7 +77,7 @@ window.addEventListener("configLoaded", () => {
     formData.append(type, fichier);
 
     try {
-      const response = await fetch(API_URL+ "api/${id}/${type}", {
+      const response = await fetch(API_URL+ "/api/${id}/${type}", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`
