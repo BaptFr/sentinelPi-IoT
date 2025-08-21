@@ -3,6 +3,7 @@ from typing import Optional
 from uuid import UUID
 from backend.models.enums import UserRole
 
+
 class UserCreate(BaseModel):
     lastname: str
     firstname: str
@@ -26,6 +27,7 @@ class UserOut(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
 class UserUpdate(BaseModel):
     lastname: Optional[str] = None
     firstname: Optional[str] = None
