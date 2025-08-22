@@ -24,10 +24,10 @@
 <div align="center"> <h1> Pitch  </h1> 
 </br> 
   
-### SentinelPi est une solution d'accès et de contrôle d’accès nouvelle génération, alliant sécurité, simplicité et confidentialité.
+### SentinelPi est une solution d'accès et de contrôle d’accès nouvelle génération, alliant sécurité renforcée, simplicité et confidentialité.
 </br> 
 
-### Basé sur un Raspberry Pi, le système permet l'ouverture de la serrure connectée par reconnaissance d'empreintes digitales,  ainsi qu'un contrôle à distance par un administrateur qui a la possibilité de modifier les accès, gérer les utilisateurs mais aussi de suivre les entrées ou tentatives via un historique.
+### Basé sur un Raspberry Pi, le système permet l'ouverture de la serrure connectée par reconnaissance d'empreintes digitales, ainsi qu'un contrôle à distance par un administrateur qui a la possibilité de modifier les accès, gérer les utilisateurs mais aussi de suivre les entrées ou tentatives via un historique.
 </div>
 </br>
 </br> 
@@ -71,9 +71,9 @@
 </br> 
 <div align="center"> <h1> Features  </h1> </div>
 
-- Interface web admin par authentification accessible n'importe où.
-- Gestion des utilisateurs à distance (ajout/suppression).
-- Suivi edes accès en temps réel et hisrotiques des accès ou tentatives avec horodatage.
+- Interface web admin sécurisé accessible depuis n'importe où.
+- Gestion des utilisateurs à distance (ajout / suppression / modification).
+- Suivi des accès en temps réel et historiques des accès ou tentatives d'accès avec horodatage.
 - Sécurité renforcée par la séparation des données : données biométriques locales sans données utilisateurs / Données utilisateurs cloud sans images biométriques.
 
 - Accès sécurisé via empreintes digitales.
