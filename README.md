@@ -24,9 +24,10 @@
 <div align="center"> <h1> Pitch  </h1> 
 </br> 
   
-### SentinelPi est une solution de contrôle d’accès nouvelle génération, alliant sécurité, simplicité et confidentialité.
+### SentinelPi est une solution d'accès et de contrôle d’accès nouvelle génération, alliant sécurité, simplicité et confidentialité.
 </br> 
-Basé sur un Raspberry Pi et la reconnaissance d’empreintes digitales, il ne se limite pas à l’identification : le système pilote directement la serrure connectée, offrant un contrôle d’accès complet, de la gestion des utilisateurs à l’ouverture physique des portes.
+
+### Basé sur un Raspberry Pi, le système permet l'ouverture de la serrure connectée par reconnaissance d'empreintes digitales,  ainsi qu'un contrôle à distance par un administrateur qui a la possibilité de modifier les accès, gérer les utilisateurs mais aussi de suivre les entrées ou tentatives via un historique.
 </div>
 </br>
 </br> 
@@ -37,13 +38,14 @@ Basé sur un Raspberry Pi et la reconnaissance d’empreintes digitales, il ne s
 </div>
 
 </br> 
-🌍 Interface web accessible de partout : grâce à un tableau de bord administrateur déployé dans le cloud, le superviseur peut consulter l’historique, gérer les utilisateurs et surveiller les accès depuis n’importe où.
 
-👥 Gestion des utilisateurs : ajout de personnes, modification ou suppression des autorisations à l'accès depuis le dashboard de l'administrateur.
+#### 🌍  Interface web accessible de partout : grâce à un tableau de bord administrateur déployé dans le cloud, le superviseur peut consulter l’historique, gérer les utilisateurs et surveiller les accès depuis n’importe où.
 
-📊 Suivi intelligent en temps réel : chaque tentative d’accès (acceptée ou refusée) sur la serrure est horodatée, tracée et immédiatement visible à distance par le superviseur. Lorsqu’un accès est validé, la personne est identifiée clairement sur le dashboard, garantissant une traçabilité sans transit des données biométriques.
+#### 👥  Gestion des utilisateurs : ajout de personnes, modification ou suppression des autorisations à l'accès depuis le dashboard de l'administrateur.
 
-🔒 Confidentialité et sécurité : les données biométriques restent strictement locales et ne quittent jamais l’appareil. Les informations utilisateurs, elles, sont stockées sur le cloud sans les empreintes, garantissant une séparation totale entre identité et biométrie.
+#### 📊  Suivi intelligent en temps réel : chaque tentative d’accès (acceptée ou refusée) sur la serrure est horodatée, tracée et immédiatement visible à distance par le superviseur. Lorsqu’un accès est validé, la personne est identifiée clairement sur le dashboard, garantissant une traçabilité sans transit des données biométriques.
+
+#### 🔒  Confidentialité et sécurité : les données biométriques restent strictement locales et ne quittent jamais l’appareil. Les informations utilisateurs, elles, sont stockées sur le cloud sans les empreintes, garantissant une séparation totale entre identité et biométrie.
 
 
 
@@ -53,20 +55,19 @@ Basé sur un Raspberry Pi et la reconnaissance d’empreintes digitales, il ne s
 
 </br> 
 </br> 
-
 </br> 
-
 
 
 <div align="center"> <h1> Infos  </h1> </div>
 
-Accès pour Login à l'interface Admin sur [https://www.sentinelpi.tech](https://www.sentinelpi.tech/) 
+- Accès pour Login à l'interface Admin sur [https://www.sentinelpi.tech](https://www.sentinelpi.tech/) 
 
-Interface et Dashboard Admin consultables dans la vidéo de Démonstration (ou accès fournis sur demande)
+- Interface et Dashboard Admin consultables dans la vidéo de Démonstration (ou accès fournis sur demande)
 
-Code du Raspberry dans la **branche "Raspberry"** du repo.
+- Code du Raspberry dans la **branche "Raspberry"** du repo.
 
-
+</br>
+</br>
 </br> 
 <div align="center"> <h1> Features  </h1> </div>
 
@@ -77,13 +78,16 @@ Code du Raspberry dans la **branche "Raspberry"** du repo.
 
 - Accès sécurisé via empreintes digitales.
 - Système polyvalent adaptable à plusieurs supports d'accès(portes, casiers, coffres...).
-- Jusqu'à 300 utilisateurs par dispositif.
+- Jusqu'à 300 utilisateurs par serrure.
+  
+</br>
+</br>
+</br>
 
-
-</br> 
 <div align="center"> <h1> Stack  </h1> </div>
 </br> 
 </br>
+
 
 ### Frontend  - Interface web admin pour la gestion des utilisateurs et la visualisation des accès
 <div float="left">
