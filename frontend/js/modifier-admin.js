@@ -23,7 +23,7 @@ function initPage() {
   const token = sessionStorage.getItem("token");
   if (!token) {
     alert("Session expirée ou accès interdit. Veuillez vous reconnecter.");
-    window.location.href = "login.html";
+    window.location.replace("admin.html");
   }
 
 

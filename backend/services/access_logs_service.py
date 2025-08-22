@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import and_, desc
 from datetime import datetime, timezone
 import uuid
@@ -20,7 +20,6 @@ def create_access_log(
     generated_time = datetime.now(paris_tz)
     formatted_time = generated_time.strftime(' Le %d/%m/%Y à %H:%M:%S')
 
- 
     db_log = AccessLog(
         id=generated_id,                    
         access_time=formatted_time,         
@@ -28,7 +27,9 @@ def create_access_log(
         fingerprint_id=log_data.fingerprint_id,
         accuracy_score=log_data.accuracy_score,
         device_id=log_data.device_id or "Serrure 1",
-        user_id=log_data.user_id
+        user_id=log_data.user_id,
+        user_firstname=log_data.user_firstname,
+        user_lastname=log_data.user_lastname
     )
     
     db.add(db_log)
@@ -41,22 +42,25 @@ def create_access_log(
         "fingerprint_id": log_data.fingerprint_id,
         "accuracy_score": log_data.accuracy_score,
         "device_id": log_data.device_id or "Serrure 1",
-        "user_id": log_data.user_id
+        "user_id": log_data.user_id,
+       "user_firstname": getattr(log_data, "user_firstname", None),
+        "user_lastname": getattr(log_data, "user_lastname", None)
     }
 
-
-def get_access_logs(
+def get_user_by_fingerprint_id(
     db: Session, 
-    skip: int = 0, 
-    limit: int = 100,
-    status_filter: Optional[str] = None
-) -> List[AccessLog]:
-    query = db.query(AccessLog)
-    
-    if status_filter:
-        query = query.filter(AccessLog.status == status_filter)
-    
-    return query.order_by(desc(AccessLog.access_time)).offset(skip).limit(limit).all()
+    fingerprint_id: str):
+    fingerprint_id = message.get("fingerprint_id")
+    print(f"[DEBUG] Reçu fingerprint_id : {fingerprint_id}")
 
-def get_user_by_fingerprint_id(db: Session, fingerprint_id: int):
-    return db.query(User).filter(User.fingerprint_id == fingerprint_id).first()
+    all_fingerprints = [u.fingerprint_id for u in db.query(User).all()]
+    print(f"[DEBUG] Fingerprints en base : {all_fingerprints}")
+
+    user = get_user_by_fingerprint_id(db, fingerprint_id)
+    if user:
+        print(f"[DEBUG] Utilisateur trouvé : {user.firstname} {user.lastname}")
+    else:
+        print(f"[DEBUG] Aucun utilisateur trouvé pour fingerprint_id {fingerprint_id}")
+
+
+    return db.query(User).filter(User.fingerprint_id == str(fingerprint_id)).first()

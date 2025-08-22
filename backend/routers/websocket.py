@@ -63,6 +63,7 @@ async def handle_device_message(device_id: str, message: dict, websocket: WebSoc
     elif message_type == "enrollment_result":
         print(f"Enrollment result from {device_id}: {message}")
     
+    
 
 @router.get("/status")
 async def websocket_status():

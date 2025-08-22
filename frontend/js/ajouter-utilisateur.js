@@ -5,7 +5,7 @@ function initPage() {
   const firstnameCheck = document.getElementById("prenom")
   const lastnameCheck = document.getElementById("nom")
   const photoInput = document.getElementById("photoInput");
-  const addUserSubmitBtn = document.getElementById("addUserSubmitBtn");
+  //DEBUG const addUserSubmitBtn = document.getElementById("addUserSubmitBtn");
   const enrollmentSubmitBtn = document.getElementById("enrollmentSubmitBtn");
   const status = document.getElementById("enrollment-status");
   const cancelEnrollmentBtn = document.getElementById("cancelEnrollmentBtn");
@@ -89,10 +89,6 @@ function initPage() {
         const result = await response.json();
         console.log(result);
         currentEnrollmentId = result.enrollment_id;
-        status.classList.remove("visible");
-        status.classList.add("hidden");
-        alert("Utilisateur ajouté avec succès !");
-        window.location.href = "admin.html"; 
       } else {
         const result = await response.json();
         status.classList.add("hidden");
@@ -187,7 +183,7 @@ function initPage() {
   const btn = document.querySelector(".return-btn");
   if (btn) {
     btn.addEventListener("click", () => {
-      window.location.href = "admin.html";
+      window.location.replace("admin.html");
     });
   }
 }

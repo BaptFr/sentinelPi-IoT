@@ -98,11 +98,21 @@ def confirm_enrollment(
         user_info['enrollment_id'] = enrollment_data.enrollment_id
 
         #Confirmed new User creation after confirmation
-        return create_user_in_db(
+        new_user = create_user_in_db(
             db, user_info, 
             fingerprint_id=user_info['fingerprint'], 
             enrollment_id=user_info['enrollment_id']
         )
+
+        message = {
+            "type": "enrollment_confirmed",
+            "enrollment_id": enrollment_data.enrollment_id,
+            "firstname": user_info["firstname"],
+            "lastname": user_info["lastname"]
+        }
+        manager.broadcast(message)
+        return {"status": "success", "message": "Enrollment confirmed"}
+
     else:
          raise HTTPException(status_code=400, detail="Invalid enrollment ")
 
