@@ -29,8 +29,9 @@ window.addEventListener("configLoaded", () => {
         //DEBUG
         console.log("API_URL utilisé :", API_URL);
         const data = await response.json();
-        sessionStorage.setItem("token", data.access_token); 
-        window.location.href = "admin.html";
+        sessionStorage.setItem("token", data.access_token);
+        window.dispatchEvent(new Event("configLoaded"));
+        window.location.replace("admin.html");
       } else {
         alert("Email ou mot de passe incorrect.");
       }

@@ -13,8 +13,10 @@ class AccessLog(Base):
     access_time = Column(String, nullable=True)  #Debug: utc.now deprecated
     status = Column(String, nullable=False)
     device_id = Column(String, default="Serrure 1")
-    fingerprint_id = Column(Integer, nullable=True)
+    fingerprint_id = Column(String, nullable=True)
     user_id = Column(String, nullable=True)
     accuracy_score = Column(String, nullable=True) 
+    user_firstname = Column(String, nullable=True)
+    user_lastname = Column(String, nullable=True)
 
     

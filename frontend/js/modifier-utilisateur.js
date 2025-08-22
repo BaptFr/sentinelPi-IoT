@@ -16,13 +16,13 @@ function initPage() {
   const token = sessionStorage.getItem("token");
   if (!token) {
     alert("Session expirée ou accès interdit. Veuillez vous reconnecter.");
-    window.location.href = "login.html";
+    window.location.replace("admin.html");
   }
 
   //User id recuperation
   if (!userId) {
     alert("Aucun utilisateur sélectionné");
-    window.location.href = "admin.html";
+    window.location.replace("admin.html");
     return;
   }
 
@@ -47,7 +47,7 @@ function initPage() {
     })
     .catch((err) => {
       alert(err.message);
-      window.location.href = "admin.html";
+      window.location.replace("admin.html");
     });
 
   //Using form data not JSON  for  possible evolution of the application (picture, file...)
@@ -82,7 +82,7 @@ function initPage() {
 
       if (response.ok) {
         document.getElementById("modifierUserForm").reset();
-        window.location.href = "admin.html";
+        window.location.replace("admin.html");
       } else {
         const result = await response.json();
         alert(result.message || "Erreur lors de la modification.");
@@ -98,7 +98,7 @@ function initPage() {
   if (btn) {
     btn.addEventListener("click", (e) => {
        e.preventDefault();
-      window.location.href = "admin.html";
+      window.location.replace("admin.html");
     });
   }
 }

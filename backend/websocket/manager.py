@@ -1,9 +1,18 @@
-from fastapi import WebSocket, WebSocketDisconnect
-from typing import Dict, List, Any
 import json
 import asyncio
-from datetime import datetime
 import logging
+
+from datetime import datetime
+from sqlalchemy.orm import Session
+from sqlalchemy import desc
+from fastapi import WebSocket, WebSocketDisconnect
+from typing import Dict, List, Any
+from backend.services.access_logs_service import create_access_log, get_user_by_fingerprint_id
+from backend.schemas.access_log import AccessLogCreate
+from backend.models.lock_users import User
+from backend.database.database import get_db
+
+logging.basicConfig(level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +48,7 @@ class ConnectionManager:
             del self.active_connections[device_id]
             logger.info(f"Device {device_id} disconnected")
     
+
     async def send_message(self, device_id: str, message: str):
         websocket = self.active_connections.get(device_id)
         if websocket:
@@ -79,11 +89,20 @@ class ConnectionManager:
             return False
 
 
+    #Reception from Raspberry
     async def handle_device_message(self, device_id: str, message: Dict[str, Any]):
         action = message.get("action")
+        if not action:
+            return  
+            
+        if action == "heartbeat":
+            await websocket.send_text(json.dumps({
+                "type": "heartbeat_ack",
+                "timestamp": message.get("timestamp")
+            }))
 
         #Futur resolution NOT the confirmation for endpoitn
-        if action == "delete_confirmation":
+        elif action == "delete_confirmation":
             fingerprint_id = str(message.get("fingerprint_id"))
             success = message.get("success", False)
             fut = self.pending_responses.pop(fingerprint_id, None)
@@ -93,6 +112,57 @@ class ConnectionManager:
                     fut.set_result(True)
                 else:
                     fut.set_exception(Exception(message.get("message", "Delete failed")))
+        
+        #Access logs
+        elif action == "access_log":
+            try:
+                db = next(get_db())
+                logger.debug(f"[DEBUG] Received message from raspb fot access_log : {message}")
+
+                position = message.get("position")
+                logger.debug(f"[DEBUG] Message reçu pour access_log : {message}")
+                user_firstname = None
+                user_lastname = None
+                user_id = None
+                fingerprint_id = None
+                if position is not None:
+                    fingerprint_id = str(position)
+                    user = db.query(User).filter(User.fingerprint_id == fingerprint_id).first()
+                    logger.debug(f"[DEBUG] Utilisateur trouvé : {user} ")
+
+                    if user:
+                        user_firstname = user.firstname
+                        user_lastname = user.lastname
+                        user_id = user.id
+
+                        logger.debug(f"[DEBUG] Utilisateur trouvé : {user_firstname} {user_lastname} (ID={user_id})")
+                    else:
+                        logger.debug(f"[DEBUG] Utilisateur trouvé : {user_firstname} {user_lastname} (ID={user_id})")
+                
+                log_entry = AccessLogCreate(
+                    status=message.get("status"),
+                    fingerprint_id=fingerprint_id,
+                    accuracy_score=message.get("score"),
+                    user_id=user_id,
+                    user_firstname=user_firstname,
+                    user_lastname=user_lastname,
+                    device_id=device_id
+                )
+
+                logger.debug(f"[DEBUG] AccessLogCreate ready to be sent to service: {log_entry}")
+
+
+                #Service call to create the call
+                access_log = create_access_log(db, log_entry)
+                logger.debug(f"[WS] Access log saved for {device_id} : {access_log}")
+
+            except Exception as e:
+                logger.error(f"[WS] access_log save error: {e}")
+
+        else:
+            logger.warning(f"[WS] Unknown action receivd from {device_id}: {action}")
+
+
 
     #Device conf
     async def wait_for_device_confirmation(self, fingerprint_id: str, timeout: float = 5.0) -> bool:

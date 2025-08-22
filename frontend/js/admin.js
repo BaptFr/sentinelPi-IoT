@@ -1,52 +1,50 @@
 
-// API config load
-window.addEventListener("configLoaded", () => {
-    console.log("configLoaded started (admin) ");
+function initAdminPage() {
+  verifierConnexion();
+  chargerUtilisateurs();
+  chargerHistorique();
+}
 
-    verifierConnexion();
-    chargerUtilisateurs();
-    chargerHistorique();
-
-  function verifierConnexion() {
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      alert("Session expirée. Veuillez vous reconnecter.");
-      window.location.href ="login.html";
-    }
-  }
-
-  function deconnexion() {
-    sessionStorage.removeItem("token");
+function verifierConnexion() {
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    alert("Session expirée. Veuillez vous reconnecter.");
     window.location.href = "login.html";
   }
+}
 
-  async function chargerUtilisateurs() {
-    const token = sessionStorage.getItem("token");
+function deconnexion() {
+  sessionStorage.removeItem("token");
+  window.location.href = "login.html";
+}
+
+async function chargerUtilisateurs() {
+  const token = sessionStorage.getItem("token");
 
   //lock-users list
-    try {
-      const response = await fetch(API_URL + "/api/lock-users", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        deconnexion();
-        return;
+  try {
+    const response = await fetch(API_URL + "/api/lock-users", {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
+    });
 
-      const utilisateurs = await response.json();
-      const userList = document.getElementById("user-list");
-      userList.innerHTML = "";
+    if (response.status === 401 || response.status === 403) {
+      deconnexion();
+      return;
+    }
 
-      if (utilisateurs.length === 0) {
-        userList.innerHTML = "<tr><td colspan='6'>Aucun utilisateur trouvé.</td></tr>";
-      } else {
-        utilisateurs.forEach(user => {
-          const tr = document.createElement("tr");
-          console.log(user)
-          tr.innerHTML = `
+    const utilisateurs = await response.json();
+    const userList = document.getElementById("user-list");
+    userList.innerHTML = "";
+
+    if (utilisateurs.length === 0) {
+      userList.innerHTML = "<tr><td colspan='6'>Aucun utilisateur trouvé.</td></tr>";
+    } else {
+      utilisateurs.forEach(user => {
+        const tr = document.createElement("tr");
+        console.log(user)
+        tr.innerHTML = `
             <td>${user.lastname}</td>
             <td>${user.firstname}</td>
             <td>${user.fingerprint_id ? '✅ Accès Serrure1' : '❌'}</td>
@@ -56,109 +54,110 @@ window.addEventListener("configLoaded", () => {
             </td>
           `;
 
-          userList.appendChild(tr);
-        });
-      }
-    } catch (error) {
-      console.error("Lock_users llist loading error :", error);
+        userList.appendChild(tr);
+      });
     }
+  } catch (error) {
+    console.error("Lock_users llist loading error :", error);
+  }
+}
+
+//Si ajout MEDIA ou autre 
+async function modifierMediaUtilisateur(id, type, fichier) {
+  const token = sessionStorage.getItem("token");
+
+  if (!fichier || !["image/jpeg", "image/png", "image/jpg", "image/webp", "image/bmp", "image/svg+xml"].includes(fichier.type)) {
+    alert("Format de fichier non supporté.");
+    return;
   }
 
-  //Si ajout MEDIA ou autre 
-  async function modifierMediaUtilisateur(id, type, fichier) {
-    const token = sessionStorage.getItem("token");
+  const formData = new FormData();
+  formData.append(type, fichier);
 
-    if (!fichier || !["image/jpeg", "image/png", "image/jpg", "image/webp", "image/bmp", "image/svg+xml"].includes(fichier.type)) {
-      alert("Format de fichier non supporté.");
+  try {
+    const response = await fetch(API_URL + "/api/${id}/${type}", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
+    });
+
+    if (response.ok) {
+      alert(`${type} modifié avec succès.`);
+      chargerUtilisateurs();
+    } else {
+      alert(`Erreur lors de la mise à jour de ${type}.`);
+    }
+  } catch (error) {
+    console.error(`Erreur mise à jour ${type}:`, error);
+  }
+}
+
+async function chargerHistorique() {
+  const token = sessionStorage.getItem("token");
+
+  try {
+    const response = await fetch(API_URL + "/api/logs/access", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (response.status === 401 || response.status === 403) {
+      deconnexion();
       return;
     }
 
-    const formData = new FormData();
-    formData.append(type, fichier);
+    const historique = await response.json();
+    const historyList = document.getElementById("history-list");
+    historyList.innerHTML = "";
 
-    try {
-      const response = await fetch(API_URL+ "/api/${id}/${type}", {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        body: formData
-      });
-
-      if (response.ok) {
-        alert(`${type} modifié avec succès.`);
-        chargerUtilisateurs();
-      } else {
-        alert(`Erreur lors de la mise à jour de ${type}.`);
-      }
-    } catch (error) {
-      console.error(`Erreur mise à jour ${type}:`, error);
-    }
-  }
-
-  async function chargerHistorique() {
-    const token = sessionStorage.getItem("token");
-
-    try {
-      const response = await fetch(API_URL + "/api/logs/access", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (response.status === 401 || response.status === 403) {
-        deconnexion();
-        return;
-      }
-
-      const historique = await response.json();
-      const historyList = document.getElementById("history-list");
-      historyList.innerHTML = "";
-
-      historique.forEach(item => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${item.lastname}</td>
-          <td>${item.firstname}</td>
+    historique.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+          <td>${item.user_lastname || "INCONNU"}</td>
+          <td>${item.user_firstname|| "Tentative"}</td>
           <td>${item.access_time}</td>
           <td>${item.status}</td>
           <td>${item.device_id}</td>
         `;
-        historyList.appendChild(tr);
-      });
-    } catch (error) {
-      console.error("Erreur historique :", error);
-    }
+      historyList.appendChild(tr);
+      console.log("Historique chargé :", item);
+    });
+  } catch (error) {
+    console.error("Erreur historique :", error);
   }
+}
 
-  async function viderHistorique() {
-    const token = sessionStorage.getItem("token");
-    if (!confirm("Voulez-vous vraiment vider l’historique ?")) return;
+async function viderHistorique() {
+  const token = sessionStorage.getItem("token");
+  if (!confirm("Voulez-vous vraiment vider l’historique ?")) return;
 
-    try {
-      const response = await fetch("https://URL_API/historique", {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        alert("Historique vidé.");
-        chargerHistorique();
-      } else {
-        alert("Erreur lors du nettoyage.");
+  try {
+    const response = await fetch("https://URL_API/historique", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    } catch (error) {
-      console.error("Erreur suppression historique :", error);
-    }
-  }
+    });
 
-  function modifierUtilisateur(id) {
-    window.location.href = `modifier-utilisateur.html?id=${id}`;
+    if (response.ok) {
+      alert("Historique vidé.");
+      chargerHistorique();
+    } else {
+      alert("Erreur lors du nettoyage.");
+    }
+  } catch (error) {
+    console.error("Erreur suppression historique :", error);
   }
-})
+}
+
+function modifierUtilisateur(id) {
+  window.location.href = `modifier-utilisateur.html?id=${id}`;
+}
+
 
 function supprimerUtilisateur(id) {
   if (confirm("ÊTES VOUS SÛR DE VOULOIR SUPPRIMER CET UTILISATEUR ?")) {
@@ -180,4 +179,12 @@ function supprimerUtilisateur(id) {
         alert("Erreur lors de la suppression.");
       });
   }
+
+}
+
+//CONFIG
+if (API_URL) {
+    initAdminPage();
+} else {
+    window.addEventListener("configLoaded", initAdminPage);
 }
