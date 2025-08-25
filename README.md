@@ -50,6 +50,7 @@
 
 
 <div align="center">
+    
 ### En combinant fiabilité matérielle, sécurité logicielle et ergonomie web, SentinelPi propose une solution "clé" en main pour un contrôle d’accès moderne et robuste.
 </div>
 
