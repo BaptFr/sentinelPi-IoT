@@ -76,9 +76,9 @@
 - Suivi des accès en temps réel et historiques des accès ou tentatives d'accès avec horodatage.
 - Sécurité renforcée par la séparation des données : données biométriques locales sans données utilisateurs / Données utilisateurs cloud sans images biométriques.
 
-- Accès sécurisé via empreintes digitales.
-- Système polyvalent adaptable à plusieurs supports d'accès(portes, casiers, coffres...).
-- Jusqu'à 300 utilisateurs par serrure.
+- Accès sécurisés par reconnaissance d'empreintes digitales.
+- Système polyvalent adaptable à plusieurs supports d'accès (portes, casiers, coffres...).
+- Jusqu'à 300 utilisateurs reconnus par serrure.
   
 </br>
 </br>
@@ -99,7 +99,7 @@
   
 </div>
 
-- **Langages :** POur la Verison 1 HTML, CSS, JavaScript 
+- **Langages :** Pour la Verison 1 HTML, CSS, JavaScript 
 - **Communication :** Requêtes HTTPS pour interagir avec le backend (REST API)  
 
 </br> 
@@ -157,13 +157,13 @@
 </br> 
 
 </br> 
-<div align="center"> <h1> Team & organizattion  </h1> </div>
+<div align="center"> <h1> Team & organisation  </h1> </div>
 
 <div align="center">
   
 </br> 
 
- ### Jawad LAMHAOURKI
+### Jawad LAMHAOURKI
 
 ### Ludivine THINET
 
