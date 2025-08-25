@@ -177,7 +177,7 @@
 
 ### Méthodes et outils d'organisation:
 - Méthode Agile Kanban
-- Trello : [Voir tableau KANBAN sur trello](https://trello.com/invite/b/68811583cc402617a1afd28c/ATTI062f1ae5625cd26227a6296db04c04db56DD964E/tableau-kanban-taches)
+- Trello : [VOIR LE TABLEAU KANBAN sur trello](https://trello.com/invite/b/68811583cc402617a1afd28c/ATTI062f1ae5625cd26227a6296db04c04db56DD964E/tableau-kanban-taches)
   
 ### Travail en commun, partages de documents:
 - Google Drive , Google Doc
@@ -189,11 +189,10 @@
 <div align="center"> <h1> Demo  </h1> </div> 
 
 <div align="center">
-  <h3>Lien vers  vidéo de démonstration fonctionnelle:</h3>
+  <h3>Lien vers vidéo de démonstration fonctionnelle:</h3>
+  <img src="https://freesvg.org/img/purzen_Arrow.png" alt="arrow"  height="60" />  
+  
 
-<h4>En cours ...<h4>
-
-<img src="https://media.tenor.com/LKaHEd5dxjwAAAA1/looking-at-wrist-watch-wrist-watch.webp" alt="waiting-demo" width="300"/>
-
+[VOIR LA VIDEO](https://drive.google.com/file/d/1O45TUK8ZJpJpfTdv8lTNmULktiQystbF/view?usp=sharing)
 <div/>
 
