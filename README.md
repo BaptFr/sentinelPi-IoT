@@ -181,7 +181,7 @@
 ### Travail en commun, partages de documents:
 - Google Drive , Google Doc
 - Contrôle de versions: git
-- Bonnes pratiques communes GitHub dans le repo: fichier ###CONTRIBUTING.md###
+- Bonnes pratiques communes GitHub dans le repo: fichier CONTRIBUTING.md
 
 
 </br> 
