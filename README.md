@@ -61,11 +61,11 @@
 
 <div align="center"> <h1> Infos  </h1> </div>
 
-- Accès pour Login à l'interface Admin sur [https://www.sentinelpi.tech](https://www.sentinelpi.tech/) 
+- Accès pour Login à l'interface Admin sur **[https://www.sentinelpi.tech](https://www.sentinelpi.tech/)**  .
 
-- Interface et Dashboard Admin consultables dans la vidéo de Démonstration (ou accès fournis sur demande)
+- Interface et Dashboard Admin consultables dans la vidéo de Démonstration en bas de page (ou accès fournis sur demande).
 
-- Code du Raspberry dans la **branche "Raspberry"** du repo.
+- Code du Raspberry ajouté dans la **[branche "raspberry"](https://github.com/it-akademy-students/sentinelPi-it/tree/raspberry)** du repo.
 
 </br>
 </br>
