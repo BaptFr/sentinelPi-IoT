@@ -157,7 +157,40 @@
 </br> 
 </br> 
 
+### 📦 Installer facilement l'ensemble des dépendances nécessaires au projet 
+
+**Le fichier requirements.txt inclus à la racine du projet sert à lister toutes les dépendances Python du projet afin que n’importe qui puisse les installer facilement avec pip (pip estinclus dans Python).**
+
+**Etapes et commandes Bash:**
+#### 1. Créer un environnement virtuel
+
+</br>
+
+#### 2. Installer les dépendances
+
+##### pip install -r requirements.txt
+
+</br>
+
+#### 3. Ajouter un package
+
+##### pip install nom_du_package
+##### pip freeze > requirements.txt
+
+</br>
+
+#### 4. Ne pas pas upgrade requirement.txt
+
+##### Le fichier requirement.txt sert aussi à figer les dépendance pour éviter une mise à jour des dépendances cassant le code en créant des incompatibilités (pip freeze > requirements.txt). 
+
 </br> 
+</br> 
+</br>
+
+<div align="center"> <h1> Documentation  </h1> </div>
+
+<div align="center"> En cours ... </div>
+
 <div align="center"> <h1> Team & organisation  </h1> </div>
 
 <div align="center">
@@ -190,9 +223,10 @@
 
 <div align="center">
   <h3>Lien vers vidéo de démonstration fonctionnelle:</h3>
-  <img src="https://freesvg.org/img/purzen_Arrow.png" alt="arrow"  height="60" />  
-  
 
-[VOIR LA VIDEO](https://drive.google.com/file/d/1O45TUK8ZJpJpfTdv8lTNmULktiQystbF/view?usp=sharing)
+<img src="https://cdn1.thesculptedvegan.com/wp-content/uploads/2020/05/07151301/Arrows-3-pointing-down-arrow-down-animated.gif" height="100" /> 
+ 
+## <a> [VOIR LA VIDEO](https://drive.google.com/file/d/1O45TUK8ZJpJpfTdv8lTNmULktiQystbF/view?usp=sharing) <a/> 
+
 <div/>
 
